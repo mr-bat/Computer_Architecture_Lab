@@ -47,6 +47,12 @@ module Controller
 	parameter BNE = 41;
 	parameter JMP = 42;
 	
+	// define branch types
+	parameter NO_BRANCH_Code = 2'b0;
+	parameter BEZ_Code = 2'b01;
+	parameter BNE_Code = 2'b10;
+	parameter JMP_Code = 2'b11;
+
 	// build module
 	
 	always @(*)
@@ -134,13 +140,13 @@ module Controller
 		
 		case(Opcode)
 			BEZ:
-				BR_Type = 2'b01;
+				BR_Type = BEZ_Code;
 			BNE:
-				BR_Type = 2'b10;
+				BR_Type = BNE_Code;
 			JMP:
-				BR_Type = 2'b11;
+				BR_Type = JMP_Code;
 			default:
-				BR_Type = 2'b0;
+				BR_Type = NO_BRANCH_Code;
 		endcase
 	end
 endmodule

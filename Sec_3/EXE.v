@@ -10,7 +10,9 @@ module EXE_Stage
 		readdata1,
 		readdata2,
 		Immediate,
-		data2
+		data2,
+		branch_taken,
+		branch_address
 	);
 	
 	// input and output ports
@@ -24,11 +26,8 @@ module EXE_Stage
 	input	[31:0]	data2;
 	input 	[31:0] 	Immediate;
 	output	[31:0]	Instruction;
-	
-	// wires and registers
-	wire	[31:0]	result;
-	
-	// build module
+	output			branch_taken;
+	output	[31:0]	branch_address;
 	
 	// pass instruction
 	assign Instruction = Instruction_in;
@@ -42,4 +41,15 @@ module EXE_Stage
 		.result(result)
 	);
 	
+	// address selector
+	assign branch_address = ((readdata2 << 2) + 4 + Instruction_in);
+	
+	// branch codition
+	Condition_Check condition_check
+	(
+		.BR_Type(BR_Type),
+		.readdata1(readdata1),
+		.readdata2(readdata2),
+		.branch_taken(branch_taken)
+	);
 endmodule

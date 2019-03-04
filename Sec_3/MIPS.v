@@ -18,6 +18,8 @@ module MIPS
 	wire			MEM_R_En22;
 	wire			MEM_W_En21;
 	wire			MEM_W_En22;
+	wire 			Branch_Taken;
+	wire 	[31:0] 	Branch_Address;
 	wire	[1:0]	BR_Type21;
 	wire	[1:0]	BR_Type22;
 	wire	[3:0]	EXE_Cmd21;
@@ -52,7 +54,9 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
-			.Instruction(Instruction11)
+			.Instruction(Instruction11),
+			.branch_taken(branch_taken),
+			.branch_address(Branch_Address)
 		);
 		
 	// instruction fetch register
@@ -114,12 +118,20 @@ module MIPS
 		);
 	// execution
 	EXE_Stage EXES
-		(
-			.clk(clk),
-			.rst(rst),
-			.Instruction_in(Instruction22),
-			.Instruction(Instruction31)
-		);
+	(
+		.clk(clk),
+		.rst(rst),
+		.Instruction_in(Instruction22),
+		.Instruction(Instruction31),
+		.BR_Type(BR_Type22),
+		.EXE_Cmd(EXE_Cmd22),
+		.readdata1(readdata122),
+		.readdata2(readdata222),
+		.Immediate(Immediate22),
+		.data2(data222),
+		.branch_taken(Branch_Taken),
+		.branch_address(Branch_Address)
+	);
 	// execution register
 	EXE_Stage_reg EXER
 		(
