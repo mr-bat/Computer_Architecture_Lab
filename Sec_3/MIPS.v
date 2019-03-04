@@ -24,6 +24,7 @@ module MIPS
 	wire	[1:0]	BR_Type22;
 	wire	[3:0]	EXE_Cmd21;
 	wire	[3:0]	EXE_Cmd22;
+	wire	[31:0]	ALU_Result;
 	wire	[4:0]	dest21;
 	wire	[4:0]	dest22;
 	wire	[31:0]	Instruction11;
@@ -130,7 +131,8 @@ module MIPS
 		.Immediate(Immediate22),
 		.data2(data222),
 		.branch_taken(Branch_Taken),
-		.branch_address(Branch_Address)
+		.branch_address(Branch_Address),
+		.ALU_result(ALU_Result)
 	);
 	// execution register
 	EXE_Stage_reg EXER

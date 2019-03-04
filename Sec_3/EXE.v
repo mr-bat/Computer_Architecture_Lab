@@ -12,7 +12,8 @@ module EXE_Stage
 		Immediate,
 		data2,
 		branch_taken,
-		branch_address
+		branch_address,
+		ALU_result
 	);
 	
 	// input and output ports
@@ -28,6 +29,7 @@ module EXE_Stage
 	output	[31:0]	Instruction;
 	output			branch_taken;
 	output	[31:0]	branch_address;
+	output	[31:0]	ALU_result;
 	
 	// pass instruction
 	assign Instruction = Instruction_in;
@@ -38,7 +40,7 @@ module EXE_Stage
 		.dataa(readdata1),
 		.datab(data2),
 		.Function(EXE_Cmd),
-		.result(result)
+		.result(ALU_result)
 	);
 	
 	// address selector
