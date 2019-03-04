@@ -14,17 +14,28 @@ module MIPS
 	// wires
 	wire 			WB_En21;
 	wire			WB_En22;
+	wire			WB_En32;
+	wire			WB_En42;
+	wire			WB_En51;
 	wire			MEM_R_En21;
 	wire			MEM_R_En22;
+	wire			MEM_R_En32;
+	wire			MEM_R_En42;
+	wire			MEM_R_En51;
 	wire			MEM_W_En21;
 	wire			MEM_W_En22;
+	wire			MEM_W_En32;
+	wire			MEM_W_En42;
 	wire 			Branch_Taken;
 	wire 	[31:0] 	Branch_Address;
 	wire	[1:0]	BR_Type21;
 	wire	[1:0]	BR_Type22;
 	wire	[3:0]	EXE_Cmd21;
 	wire	[3:0]	EXE_Cmd22;
-	wire	[31:0]	ALU_Result;
+	wire	[31:0]	ALU_Result31;
+	wire	[31:0]	ALU_Result32;
+	wire	[31:0]	ALU_Result42;
+	wire	[31:0]	ALU_Result51;
 	wire	[4:0]	dest21;
 	wire	[4:0]	dest22;
 	wire	[31:0]	Instruction11;
@@ -44,6 +55,7 @@ module MIPS
 	wire	[31:0]	Immediate22;
 	wire	[31:0]	data221;
 	wire	[31:0]	data222;
+	wire	[31:0]	WB_Data;
 	
 	// assemble modules
 	
@@ -74,8 +86,8 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
-			.writedata(32'b0),
-			.write(1'b0),
+			.writedata(WB_Data),
+			.write(WB_En42),
 			.Instruction_in(Instruction12),
 			.WB_En(WB_En21),
 			.MEM_R_En(MEM_R_En21),
@@ -132,7 +144,7 @@ module MIPS
 		.data2(data222),
 		.branch_taken(Branch_Taken),
 		.branch_address(Branch_Address),
-		.ALU_result(ALU_Result)
+		.ALU_result(ALU_Result31)
 	);
 	// execution register
 	EXE_Stage_reg EXER
@@ -140,7 +152,15 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.Instruction_in(Instruction31),
-			.Instruction(Instruction32)
+			.Instruction(Instruction32),
+			.WB_En_in(WB_En22),
+			.MEM_R_En_in(MEM_R_En22),
+			.MEM_W_En_in(MEM_W_En22),
+			.ALU_result_in(ALU_Result31),
+			.WB_En(WB_En32),
+			.MEM_R_En(MEM_R_En32),
+			.MEM_W_En(MEM_W_En32),
+			.ALU_result(ALU_Result32)
 		);
 	// memory
 	MEM_Stage MEMS
@@ -156,7 +176,15 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.Instruction_in(Instruction41),
-			.Instruction(Instruction42)
+			.Instruction(Instruction42),
+			.WB_En_in(WB_En32),
+			.MEM_R_En_in(MEM_R_En32),
+			.MEM_W_En_in(MEM_W_En32),
+			.ALU_result_in(ALU_Result32),
+			.WB_En(WB_En42),
+			.MEM_R_En(MEM_R_En42),
+			.MEM_W_En(MEM_W_En42),
+			.ALU_result(ALU_Result42)
 		);
 	// writeback
 	WB_Stage WBS
@@ -164,7 +192,10 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.Instruction_in(Instruction42),
-			.Instruction(Instruction51)
+			.MEM_R_En(MEM_R_En42),
+			.ALU_result(ALU_Result42),
+			.Mem_Data(32'b0),
+			.WB_Data(WB_Data)
 		);
 	
 endmodule

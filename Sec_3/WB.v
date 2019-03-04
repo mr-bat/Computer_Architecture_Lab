@@ -4,16 +4,21 @@ module WB_Stage
 		clk,
 		rst,
 		Instruction_in,
-		Instruction
+		MEM_R_En,
+		ALU_result,
+		Mem_Data,
+		WB_Data
 	);
 	
 	// input and output ports
 	input			clk;
 	input			rst;
 	input	[31:0]	Instruction_in;
-	output	[31:0]	Instruction;
+	input			MEM_R_En;
+	input	[31:0]	ALU_result;
+	input	[31:0]	Mem_Data;
+	output	[31:0]	WB_Data;
 	
 	// build module
-	assign Instruction = Instruction_in;
-	
+	assign WB_Data = (MEM_R_En) ? Mem_Data : ALU_result;
 endmodule
