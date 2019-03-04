@@ -26,6 +26,8 @@ module MIPS
 	wire			MEM_W_En22;
 	wire			MEM_W_En32;
 	wire			MEM_W_En42;
+	wire	[31:0]	PC11;
+	wire	[31:0]	PC12;
 	wire 			Branch_Taken;
 	wire 	[31:0] 	Branch_Address;
 	wire	[1:0]	BR_Type21;
@@ -69,7 +71,8 @@ module MIPS
 			.rst(rst),
 			.Instruction(Instruction11),
 			.branch_taken(branch_taken),
-			.branch_address(Branch_Address)
+			.branch_address(Branch_Address),
+			.PC(PC11)
 		);
 		
 	// instruction fetch register
@@ -78,7 +81,9 @@ module MIPS
 		.clk(clk),
 		.rst(rst),
 		.Instruction_in(Instruction11),
-		.Instruction(Instruction12)
+		.Instruction(Instruction12),
+		.PC_in(PC11),
+		.PC(PC12)
 	);
 		
 	// instruction decode
@@ -116,7 +121,7 @@ module MIPS
 			.MEM_W_En_in(MEM_W_En21),
 			.BR_Type_in(BR_Type21),
 			.EXE_Cmd_in(EXE_Cmd21),
-			.Instruction_in(Instruction21),
+			.Instruction_in(PC12),
 			.readdata1(readdata122),
 			.readdata2(readdata222),
 			.Immediate(Immediate22),

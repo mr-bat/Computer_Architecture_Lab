@@ -16,7 +16,8 @@ module ID_Stage
 		Immediate,
 		data2,
 		dest,
-		Instruction
+		Instruction,
+		PC_in
 	);
 	
 	// input and output ports
@@ -36,6 +37,7 @@ module ID_Stage
 	output 	[31:0]	Immediate;
 	output 	[31:0]	data2;
 	output	[31:0]	Instruction;
+	input	[31:0]	PC_in;
 	
 	// wires and register
 	wire 			Is_Imm;
@@ -43,7 +45,7 @@ module ID_Stage
 	// build module
 	
 	// pass instruction
-	assign Instruction = Instruction_in;
+	assign Instruction = PC_in;
 	
 	// control unit
 	Controller CU

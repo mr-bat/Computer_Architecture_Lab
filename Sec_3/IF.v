@@ -5,7 +5,8 @@ module IF_Stage
 		rst,
 		Instruction,
 		branch_taken,
-		branch_address
+		branch_address,
+		PC
 	);
 	
 	// define input and output ports
@@ -14,6 +15,7 @@ module IF_Stage
 	output	[31:0]	Instruction;
 	output 			branch_taken;
 	output	[31:0]	branch_address;
+	output	[31:0]	PC;
 	
 	// registers
 	reg		[31:0]	PC;
