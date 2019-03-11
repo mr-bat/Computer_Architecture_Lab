@@ -28,6 +28,8 @@ module MIPS
 	wire	[1:0]	BR_Type2;
 	wire	[4:0]	dest1;
 	wire	[4:0]	dest2;
+	wire	[4:0]	dest3;
+	wire	[4:0]	dest4;
 	wire	[3:0]	EXE_Cmd1;
 	wire	[3:0]	EXE_Cmd2;
 	wire	[31:0]	PC11;
@@ -42,6 +44,9 @@ module MIPS
 	wire	[31:0]	readdata12;
 	wire	[31:0]	readdata21;
 	wire	[31:0]	readdata22;
+	wire	[31:0]	readdata23;
+	wire	[31:0]	data11;
+	wire	[31:0]	data12;
 	wire	[31:0]	data21;
 	wire	[31:0]	data22;
 	wire	[31:0]	Immediate1;
@@ -88,6 +93,7 @@ module MIPS
 			.rst(rst),
 			.writedata(WB_Data),
 			.write(WB_En42),
+			.lastDestination(dest4),
 			.Instruction_in(Instruction2),
 			.WB_En(WB_En21),
 			.MEM_R_En(MEM_R_En21),
@@ -97,6 +103,7 @@ module MIPS
 			.readdata1(readdata11),
 			.readdata2(readdata21),
 			.Immediate(Immediate1),
+			.data1(data11),
 			.data2(data21),
 			.dest(dest1)
 		);
@@ -108,6 +115,7 @@ module MIPS
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
 			.Immediate_in(Immediate1),
+			.data1_in(data11),
 			.data2_in(data21),
 			.dest_in(dest1),
 			.WB_En_in(WB_En21),
@@ -119,6 +127,7 @@ module MIPS
 			.readdata1(readdata12),
 			.readdata2(readdata22),
 			.Immediate(Immediate2),
+			.data1(data12),
 			.data2(data22),
 			.dest(dest2),
 			.WB_En(WB_En22),
@@ -133,7 +142,7 @@ module MIPS
 		(
 			.BR_Type(BR_Type2),
 			.EXE_Cmd(EXE_Cmd2),
-			.readdata1(readdata12),
+			.readdata1(data12),
 			.readdata2(readdata22),
 			.Immediate(Immediate2),
 			.data2(data22),
@@ -152,13 +161,17 @@ module MIPS
 			.WB_En_in(WB_En22),
 			.MEM_R_En_in(MEM_R_En22),
 			.MEM_W_En_in(MEM_W_En22),
+			.readdata_in(readdata22),
 			.Immediate_in(Immediate3),
 			.ALU_result_in(ALU_Result31),
+			.dest_in(dest2),
 			.WB_En(WB_En32),
 			.MEM_R_En(MEM_R_En32),
 			.MEM_W_En(MEM_W_En32),
+			.readdata(readdata23),
 			.Immediate(Immediate3),
-			.ALU_result(ALU_Result32)
+			.ALU_result(ALU_Result32),
+			.dest(dest3)
 		);
 	// memory
 	MEM_Stage MEMS
@@ -167,9 +180,9 @@ module MIPS
 			.rst(rst),
 			.read(MEM_R_En32),
 			.write(MEM_W_En32),
-			.address(Immediate2),
+			.address(ALU_Result32[15:0]),
 			.readdata(Mem_Data1),
-			.writedata(ALU_Result32)
+			.writedata(readdata23)
 		);
 	// memory register
 	MEM_Stage_reg MEMR
@@ -182,10 +195,12 @@ module MIPS
 			.MEM_R_En_in(MEM_R_En32),
 			.ALU_result_in(ALU_Result32),
 			.Mem_Data_in(Mem_Data1),
+			.dest_in(dest3),
 			.WB_En(WB_En42),
 			.MEM_R_En(MEM_R_En42),
 			.ALU_result(ALU_Result42),
-			.Mem_Data(Mem_Data2)
+			.Mem_Data(Mem_Data2),
+			.dest(dest4)
 		);
 	// writeback
 	WB_Stage WBS

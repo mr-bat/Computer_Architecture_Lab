@@ -7,6 +7,7 @@ module ID_Stage_reg
 		readdata1_in,
 		readdata2_in,
 		Immediate_in,
+		data1_in,
 		data2_in,
 		WB_En_in,
 		MEM_R_En_in,
@@ -18,6 +19,7 @@ module ID_Stage_reg
 		readdata1,
 		readdata2,
 		Immediate,
+		data1,
 		data2,
 		WB_En,
 		MEM_R_En,
@@ -39,6 +41,7 @@ module ID_Stage_reg
 	input	[31:0]	readdata1_in;
 	input	[31:0]	readdata2_in;
 	input 	[31:0]	Immediate_in;
+	input 	[31:0]	data1_in;
 	input 	[31:0]	data2_in;
 	input	[31:0]	PC_in;
 	output 			WB_En;
@@ -50,6 +53,7 @@ module ID_Stage_reg
 	output	[31:0]	readdata1;
 	output	[31:0]	readdata2;
 	output 	[31:0]	Immediate;
+	output 	[31:0]	data1;
 	output 	[31:0]	data2;
 	output	[31:0]	PC;
 	
@@ -60,6 +64,7 @@ module ID_Stage_reg
 	reg		[31:0]	readdata1;
 	reg		[31:0]	readdata2;
 	reg 	[31:0]	Immediate;
+	reg 	[31:0]	data1;
 	reg 	[31:0]	data2;
 	reg 			WB_En;
 	reg 			MEM_R_En;
@@ -77,6 +82,7 @@ module ID_Stage_reg
 			readdata1 <= 32'b0;
 			readdata2 <= 32'b0;
 			Immediate <= 32'b0;
+			data1 <= 32'b0;
 			data2 <= 32'b0;
 			WB_En <= 1'b0;
 			MEM_R_En <= 1'b0;
@@ -91,6 +97,7 @@ module ID_Stage_reg
 			readdata1 <= readdata1_in;
 			readdata2 <= readdata2_in;
 			Immediate <= Immediate_in;
+			data1 <= data1_in;
 			data2 <= data2_in;
 			WB_En <= WB_En_in;
 			MEM_R_En <= MEM_R_En_in;

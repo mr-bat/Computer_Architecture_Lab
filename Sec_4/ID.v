@@ -5,6 +5,7 @@ module ID_Stage
 		rst,
 		writedata,
 		write,
+		lastDestination,
 		Instruction_in,
 		WB_En,
 		MEM_R_En,
@@ -14,6 +15,7 @@ module ID_Stage
 		readdata1,
 		readdata2,
 		Immediate,
+		data1,
 		data2,
 		dest
 	);
@@ -22,6 +24,7 @@ module ID_Stage
 	input			clk;
 	input			rst;
 	input			write;
+	input	[4:0]	lastDestination;
 	input	[31:0]	writedata;
 	input	[31:0]	Instruction_in;
 	output 			WB_En;
@@ -33,6 +36,7 @@ module ID_Stage
 	output	[31:0]	readdata1;
 	output	[31:0]	readdata2;
 	output 	[31:0]	Immediate;
+	output 	[31:0]	data1;
 	output 	[31:0]	data2;
 	
 	// wires and register
@@ -59,7 +63,7 @@ module ID_Stage
 		.rst(rst),
 		.readaddress1(Instruction_in[25:21]),
 		.readaddress2(Instruction_in[20:16]),
-		.writeaddress(Instruction_in[15:11]),
+		.writeaddress(lastDestination),
 		.writedata(writedata),
 		.write(write),
 		.readdata1(readdata1),
@@ -68,6 +72,9 @@ module ID_Stage
 	
 	// sign extend
 	assign Immediate = {{16{Instruction_in[15]}}, Instruction_in[15:0]};
+	
+	// data 1 mux
+	assign data1 = readdata1;
 	
 	// data 2 mux
 	assign data2 = (Is_Imm) ? Immediate : readdata2;

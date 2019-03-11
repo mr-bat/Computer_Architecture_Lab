@@ -15,22 +15,30 @@ module MEM_Stage
 	input			rst;
 	input			read;
 	input			write;
-	input	[9:0]	address;
+	input	[15:0]	address;
 	input	[31:0]	writedata;
 	output	[31:0]	readdata;
 	
 	// registers and wires
-	reg	[31:0]	registers[255:0];
+	reg		[31:0]	registers[255:0];
+	
+	wire	[15:0]	realaddress;
 	
 	// build module
 	
-	assign readdata = (read) ? registers[address[9:2]] : 32'b0;
+	MemAdd MA
+	(
+		.address_in(address),
+		.address(realaddress)
+	);
+	
+	assign readdata = (read) ? registers[realaddress[9:2]] : 32'b0;
 	
 	always @(posedge clk)
 	begin
 		if(write)
 		begin
-			registers[address] <= writedata;
+			registers[realaddress] <= writedata;
 		end
 	end
 	

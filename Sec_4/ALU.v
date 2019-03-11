@@ -45,11 +45,11 @@ module ALU
 			XOR:
 				result = dataa ^ datab;
 			SL:
-				result = {dataa[30:0], 1'b0};
-			SRA:
-				result = {dataa[31], dataa[31:1]};
+				result = dataa << datab;
 			SRL:
-				result = {1'b0, dataa[31:1]};
+				result = {{32{dataa[31]}}, dataa} >> datab;
+			SRA:
+				result = {32'b0, dataa} >> datab;
 			default:
 				result = {32{1'bx}};
 		endcase
