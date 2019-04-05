@@ -9,7 +9,7 @@ module MEM_Stage
 		readdata,
 		writedata
 	);
-	
+
 	// input and outputs
 	input			clk;
 	input			rst;
@@ -18,22 +18,22 @@ module MEM_Stage
 	input	[15:0]	address;
 	input	[31:0]	writedata;
 	output	[31:0]	readdata;
-	
+
 	// registers and wires
 	reg		[31:0]	registers[255:0];
-	
+
 	wire	[15:0]	realaddress;
-	
+
 	// build module
-	
+
 	MemAdd MA
 	(
 		.address_in(address),
 		.address(realaddress)
 	);
-	
-	assign readdata = (read) ? registers[realaddress[9:2]] : 32'b0;
-	
+
+	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+
 	always @(posedge clk)
 	begin
 		if(write)
@@ -41,5 +41,5 @@ module MEM_Stage
 			registers[realaddress] <= writedata;
 		end
 	end
-	
+
 endmodule

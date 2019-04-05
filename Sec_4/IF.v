@@ -8,7 +8,7 @@ module IF_Stage
 		branch_address,
 		PC
 	);
-	
+
 	// define input and output ports
 	input			clk;
 	input			rst;
@@ -16,13 +16,13 @@ module IF_Stage
 	input	[31:0]	branch_address;
 	output	[31:0]	Instruction;
 	output	[31:0]	PC;
-	
+
 	// registers
 	reg		[31:0]	Instruction;
 	reg		[31:0]	PC;
-	
+
 	// build module
-	
+
 	// build program counter
 	always @(posedge clk)
 	begin
@@ -36,12 +36,12 @@ module IF_Stage
 				PC <= PC + 4;
 		end
 	end
-	
+
 	// build instruction memory
 	always @(*)
 	begin
 		case(PC[31:2])
-		
+
 		/**********************************************************************************************************************
 			0:			Instruction = 32'b000000_00001_00010_00000_00000000000; // No Operation
 			1:			Instruction = 32'b000001_00011_00100_00000_00000000000; // Add r3 r4 r0
@@ -57,14 +57,14 @@ module IF_Stage
 
 			11:			Instruction = 32'b100000_00101_00110_00000_00000000010; // AddI r5 r6 2
 			12:			Instruction = 32'b100001_00101_00110_00000_00000000010; // SubI r5 r6 2
-			13:			Instruction = 32'b100100_00111_01000_00010_00000000000; // LD r7 r8 
+			13:			Instruction = 32'b100100_00111_01000_00010_00000000000; // LD r7 r8
 			14:			Instruction = 32'b100101_01001_01010_00011_00000000000; // ST r9 r10
 			15:			Instruction = 32'b101000_01011_00000_00000_00000000000; // BEZ r11 0
 			16:			Instruction = 32'b101001_01101_01110_00000_00000000000; // BNE r13 r14 0
 			17:			Instruction = 32'b101010_01101_01110_00000_00000000000; // JMP 0
 			default:		Instruction = {32{1'bx}};
 		********************************************************************************************************************/
-		
+
 1:		Instruction =  32'b100000_00000_00001_00000_11000001010;//-- Addi r1 ,r0 ,1546 //r1=1546
 2:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 3:		Instruction =  32'b000000_00000_00000_00000_00000000000;
@@ -102,7 +102,7 @@ module IF_Stage
 35:		Instruction =  32'b100101_00001_00100_00000_00000001000;//-- st r4 ,r1 ,8
 36:		Instruction =  32'b100101_00001_00101_00000_00000001100;//-- st r5 ,r1 ,12
 37:		Instruction =  32'b100101_00001_00110_00000_00000010000;//-- st r6 ,r1 ,16
-38:		Instruction =  32'b100100_00001_01011_00000_00000000100;//-- ld r11 ,r1 ,4//r11=-1456
+38:		Instruction =  32'b100100_00001_01011_00000_00000000100;//-- ld r11 ,r1 ,4//r11=-1546
 39:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 40:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 41:		Instruction =  32'b100101_00001_01011_00000_00000011000;//-- st r11 ,r1 ,24
@@ -125,12 +125,12 @@ module IF_Stage
 58:		Instruction =  32'b100100_01000_00101_00000_00000000000;//-- ld r5 ,r8 ,0 //
 59:		Instruction =  32'b100100_01000_00110_11111_11111111100;//-- ld r6 ,r8 ,-4 //
 60:		Instruction =  32'b000000_00000_00000_00000_00000000000;
-61:		Instruction =  32'b000011_00101_00110_01001_00000000000;//-- sub r9 ,r5 ,r6
-62:		Instruction =  32'b100000_00000_01010_10000_00000000000;//-- Addi r10 ,r0 ,0x8000
+61:		Instruction =  32'b000011_00101_00110_01001_00000000000;//-- sub r9 ,r5 ,r6 TODO:WRONG?
+62:		Instruction =  32'b100000_00000_01010_10000_00000000000;//-- Addi r10 ,r0 ,0x8000 TODO:WRONG?
 63:		Instruction =  32'b100000_00000_01011_00000_00000010000;//-- Addi r11 ,r0 ,16 //2
 64:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 65:		Instruction =  32'b000000_00000_00000_00000_00000000000;
-66:		Instruction =  32'b001010_01010_01011_01010_00000000000;//-- sll r10 ,r1 ,r11 //2
+66:		Instruction =  32'b001010_01010_01011_01010_00000000000;//-- sll r10 ,r1 ,r11 //2 TODO:WRONG?
 67:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 68:		Instruction =  32'b000000_00000_00000_00000_00000000000;
 69:		Instruction =  32'b000101_01001_01010_01001_00000000000;//-- And r9 ,r9 ,r10 // if(r5>r6) r9=0 else r9=-2147483648
@@ -161,10 +161,9 @@ module IF_Stage
 94:		Instruction =  32'b100100_00001_01010_00000_00000100000;//-- ld ,r10,r1 ,32 //r10=-387
 95:		Instruction =  32'b100100_00001_01011_00000_00000100100;//-- ld ,r11,r1 ,36 //r11=-6184 // when change report execution clock
 96:		Instruction =  32'b101010_00000_00000_11111_11111111111;//-- JMP -1*/
-		
+
 		default:	Instruction = 32'b000000_xxxxx_xxxxx_xxxxx_xxxxxxxxxxx;
 		endcase
 	end
-	
+
 endmodule
-			
