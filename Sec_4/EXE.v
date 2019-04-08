@@ -37,7 +37,7 @@ module EXE_Stage
 	);
 	
 	// address selector
-	assign branch_address = ((readdata2 << 2) + 4 + PC_in);
+	assign branch_address = ({Immediate[31], (Immediate[30:0] << 2)} + 4 + PC_in);
 	
 	// branch codition
 	Condition_Check condition_check

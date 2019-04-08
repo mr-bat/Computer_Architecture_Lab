@@ -147,7 +147,7 @@ module MIPS
 			.Immediate(Immediate2),
 			.data2(data22),
 			.branch_taken(Branch_Taken),
-			.PC_in(PC2),
+			.PC_in(PC11),
 			.branch_address(Branch_Address),
 			.ALU_result(ALU_Result31)
 		);
