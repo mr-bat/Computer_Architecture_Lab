@@ -31,7 +31,7 @@ module Condition_Check
 			BEZ:
 				branch_taken = (readdata1 == 0);
 			BNE:
-				branch_taken = (readdata1 != readdata2);
+				branch_taken = (readdata1 ^ readdata2);
 			JMP:
 				branch_taken = 1;
 			NO_BRANCH:

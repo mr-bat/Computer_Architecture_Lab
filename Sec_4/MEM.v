@@ -34,8 +34,15 @@ module MEM_Stage
 
 	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
 
+	integer i ;
 	always @(posedge clk)
 	begin
+	/*
+		if(rst) begin
+			for( i=0;i<256;i=i+1)
+				registers[i] <= 0;
+		end
+		else*/
 		if(write)
 		begin
 			registers[realaddress] <= writedata;

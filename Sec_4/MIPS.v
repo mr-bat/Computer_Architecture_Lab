@@ -203,6 +203,9 @@ module MIPS
 			.dest(dest4)
 		);
 	// writeback
+	reg [31:0] Mem_Data3;
+	always@(posedge clk)
+		Mem_Data3 <= Mem_Data2;
 	WB_Stage WBS
 		(
 			.MEM_R_En(MEM_R_En42),

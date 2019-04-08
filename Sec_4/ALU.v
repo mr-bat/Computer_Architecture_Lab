@@ -45,7 +45,7 @@ module ALU
 			XOR:
 				result = dataa ^ datab;
 			SL:
-				result = dataa << datab;
+				result = (dataa << datab);
 			SRL:
 				result = {{32{dataa[31]}}, dataa} >> datab;
 			SRA:
