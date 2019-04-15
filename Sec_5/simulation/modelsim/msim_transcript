@@ -1,0 +1,107 @@
+# Reading C:/Not OS/Modelsim/modelsim_ase/tcl/vsim/pref.tcl 
+# do MIPS_run_msim_rtl_verilog.do 
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Copying C:\Not OS\Modelsim\modelsim_ase\win32aloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# ** Warning: Copied C:\Not OS\Modelsim\modelsim_ase\win32aloem/../modelsim.ini to modelsim.ini.
+#          Updated modelsim.ini.
+# 
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/WB.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module WB_Stage
+# 
+# Top level modules:
+# 	WB_Stage
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/Register_File.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module Register_File
+# 
+# Top level modules:
+# 	Register_File
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/MIPS.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module MIPS
+# 
+# Top level modules:
+# 	MIPS
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/MemAdd.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module MemAdd
+# 
+# Top level modules:
+# 	MemAdd
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/MEM_Reg.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module MEM_Stage_reg
+# 
+# Top level modules:
+# 	MEM_Stage_reg
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/MEM.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module MEM_Stage
+# 
+# Top level modules:
+# 	MEM_Stage
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/IF_Reg.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module IF_Stage_reg
+# 
+# Top level modules:
+# 	IF_Stage_reg
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/IF.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module IF_Stage
+# 
+# Top level modules:
+# 	IF_Stage
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/ID_Reg.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module ID_Stage_reg
+# 
+# Top level modules:
+# 	ID_Stage_reg
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/ID.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module ID_Stage
+# 
+# Top level modules:
+# 	ID_Stage
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/EXE_Reg.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module EXE_Stage_reg
+# 
+# Top level modules:
+# 	EXE_Stage_reg
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/EXE.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module EXE_Stage
+# 
+# Top level modules:
+# 	EXE_Stage
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/Controller.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module Controller
+# 
+# Top level modules:
+# 	Controller
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/Condition_Check.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module Condition_Check
+# 
+# Top level modules:
+# 	Condition_Check
+# vlog -vlog01compat -work work +incdir+F:/Projects/CAL/MIPS/Sec_4 {F:/Projects/CAL/MIPS/Sec_4/ALU.v}
+# Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+# -- Compiling module ALU
+# 
+# Top level modules:
+# 	ALU
+# 
+# Load canceled
+project open F:/Projects/CAL/MIPS/Sec_5/MIPS
+# reading C:\Not OS\Modelsim\modelsim_ase\win32aloem/../modelsim.ini
+# Loading project MIPS
