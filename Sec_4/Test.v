@@ -16,7 +16,7 @@ module test;
 	
 	// write a test
 	
-	initial repeat (12000) #(10) clk = ~clk;
+	initial repeat (600) #(10) clk = ~clk;
 	initial repeat (400) #(5) alaki = ~alaki;
 	
 	initial
