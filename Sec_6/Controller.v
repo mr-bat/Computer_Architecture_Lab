@@ -2,7 +2,6 @@
 module Controller
 	(
 		Opcode,
-		Stall_Special_Condition,
 		Is_Imm,
 		WB_En,
 		MEM_R_En,
@@ -13,7 +12,6 @@ module Controller
 	
 	// input and output ports
 	input	[5:0]	Opcode;
-	output			Stall_Special_Condition;
 	output			Is_Imm;
 	output			WB_En;
 	output			MEM_R_En;
@@ -22,7 +20,6 @@ module Controller
 	output	[1:0]	BR_Type;
 	
 	// registers
-	reg				Stall_Special_Condition;
 	reg				Is_Imm;
 	reg				WB_En;
 	reg				MEM_R_En;
@@ -151,14 +148,6 @@ module Controller
 			default:
 				BR_Type = NO_BRANCH_Code;
 		endcase
-		
-		case(Opcode)
-			BNE:
-				Stall_Special_Condition = 1;
-			BEZ:
-				Stall_Special_Condition = 1;
-			default:
-				Stall_Special_Condition = 0;
-		endcase
+
 	end
 endmodule

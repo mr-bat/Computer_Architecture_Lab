@@ -7,7 +7,6 @@ module ID_Stage
 		write,
 		lastDestination,
 		Instruction_in,
-		Stall_Special_Condition,
 		WB_En,
 		MEM_R_En,
 		MEM_W_En,
@@ -31,7 +30,6 @@ module ID_Stage
 	input	[4:0]	lastDestination;
 	input	[31:0]	writedata;
 	input	[31:0]	Instruction_in;
-	output			Stall_Special_Condition;
 	output 			WB_En;
 	output 			MEM_R_En;
 	output 			MEM_W_En;
@@ -53,7 +51,6 @@ module ID_Stage
 	Controller CU
 	(
 		.Opcode(Instruction_in[31:26]),
-		.Stall_Special_Condition(Stall_Special_Condition),
 		.Is_Imm(Is_Imm),
 		.WB_En(WB_En),
 		.MEM_R_En(MEM_R_En),

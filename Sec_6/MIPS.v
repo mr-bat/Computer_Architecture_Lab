@@ -12,7 +12,6 @@ module MIPS
 	output	[5:0]	Instruction;
 	
 	// wires
-	wire 			Stall_Special_Condition;
 	wire 			WB_En21;
 	wire			WB_En22;
 	wire			WB_En32;
@@ -29,8 +28,10 @@ module MIPS
 	wire			Stall;
 	wire	[1:0]	BR_Type1;
 	wire	[1:0]	BR_Type2;
-	wire	[4:0]	src1;
-	wire	[4:0]	src2;
+	wire	[4:0]	src11;
+	wire	[4:0]	src21;
+	wire	[4:0]	src12;
+	wire	[4:0]	src22;
 	wire	[4:0]	dest1;
 	wire	[4:0]	dest2;
 	wire	[4:0]	dest3;
@@ -103,7 +104,6 @@ module MIPS
 			.write(WB_En42),
 			.lastDestination(dest4),
 			.Instruction_in(Instruction2),
-			.Stall_Special_Condition(Stall_Special_Condition),
 			.WB_En(WB_En21),
 			.MEM_R_En(MEM_R_En21),
 			.MEM_W_En(MEM_W_En21),
@@ -115,19 +115,19 @@ module MIPS
 			.Immediate(Immediate1),
 			.data1(data11),
 			.data2(data21),
-			.src1(src1),
-			.src2(src2),
+			.src1(src11),
+			.src2(src21),
 			.dest(dest1)
 		);
 	// hazard detectoin unit
 	Hazard HU
 		(
-			.Stall_Special_Condition(Stall_Special_Condition),
+			.BR_Type(BR_Type1),
 			.WB_En1(WB_En22),
 			.WB_En2(WB_En32),
 			.Is_Imm(Is_Imm),
-			.src1(src1),
-			.src2(src2),
+			.src1(src11),
+			.src2(src21),
 			.dest1(dest2),
 			.dest2(dest3),
 			.Stall(Stall)
@@ -151,6 +151,8 @@ module MIPS
 			.BR_Type_in(BR_Type1),
 			.EXE_Cmd_in(EXE_Cmd1),
 			.PC_in(PC12),
+			.src1_in(src11),
+			.src2_in(src21),
 			.readdata1(readdata12),
 			.readdata2(readdata22),
 			.Immediate(Immediate2),
@@ -162,7 +164,9 @@ module MIPS
 			.MEM_W_En(MEM_W_En22),
 			.BR_Type(BR_Type2),
 			.EXE_Cmd(EXE_Cmd2),
-			.PC(PC2)
+			.PC(PC2),
+			.src1(src12),
+			.src2(src22)
 		);
 	// execution
 	EXE_Stage EXES
