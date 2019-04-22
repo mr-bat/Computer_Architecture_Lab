@@ -1,14 +1,17 @@
 // build a module for assembling
+// FPGA: EP2C35F672C6
 module MIPS
 	(
 		clk,
 		rst,
+		Sel,
 		Instruction
 	);
 	
 	// input and outputs
 	input			clk;
 	input			rst;
+	input			Sel;
 	output	[5:0]	Instruction;
 	
 	// wires
@@ -67,6 +70,7 @@ module MIPS
 	wire    [31:0]  forwardVal11;
 	wire    [31:0]  forwardVal12;
 	wire    [31:0]  memForwardVal;
+	wire	[31:0]	WB_Data0;
 	wire	[31:0]	WB_Data;
 	wire	[31:0]	ALU_Result31;
 	wire	[31:0]	ALU_Result32;
@@ -131,6 +135,7 @@ module MIPS
 	// hazard detectoin unit
 	Hazard HU
 		(
+			.Sel(Sel),
 			.BR_Type(BR_Type1),
 			.WB_En1(WB_En22),
 			.WB_En2(WB_En32),
@@ -186,15 +191,14 @@ module MIPS
             .WB_En1(WB_En32),
             .WB_En2(WB_En42),
 			.mem_W_En(MEM_W_En22),
-            .Is_Imm1(Is_Imm3),
-            .Is_Imm2(Is_Imm4),
+            .Is_Imm(Is_Imm2),
             .src1(src12),
             .src2(src22),
 			.readdata2(readdata22),
             .dest1(dest3),
             .dest2(dest4),
-            .aluResult1(ALU_Result32),
-            .aluResult2(ALU_Result42),
+            .aluResult1(WB_Data0),
+            .aluResult2(WB_Data),
             .srcOut1(forwardVal11),
             .srcOut2(forwardVal12),
 			.memOut(memForwardVal),
@@ -249,9 +253,10 @@ module MIPS
 			.rst(rst),
 			.read(MEM_R_En32),
 			.write(MEM_W_En32),
-			.address(ALU_Result32[15:0]),
+			.aluResult(ALU_Result32),
 			.readdata(Mem_Data1),
-			.writedata(readdata23)
+			.writedata(readdata23),
+			.wbData(WB_Data0)
 		);
 	// memory register
 	MEM_Stage_reg MEMR

@@ -5,8 +5,9 @@ module ForwardUnit
 		WB_En1,
 		WB_En2,
 		mem_W_En,
-		Is_Imm1,
-		Is_Imm2,
+		//Is_Imm1,
+		//Is_Imm2,
+		Is_Imm,
 		src1,
 		src2,
 		readdata2,
@@ -24,8 +25,9 @@ module ForwardUnit
 	// define input and output ports
 	input			WB_En1;
 	input			WB_En2;
-	input			Is_Imm1;
-	input			Is_Imm2;
+	//input			Is_Imm1;
+	//input			Is_Imm2;
+	input			Is_Imm;
 	input			mem_W_En;
 	input	[1:0]	BR_Type;
 	input	[4:0]	src1;
@@ -59,10 +61,10 @@ module ForwardUnit
 	parameter JMP_Code = 2'b11;
 
     assign shouldForward1FromExe = !( src1 ^ dest1 ) & WB_En1 & |dest1;
-    assign shouldForward2FromExe = !( src2 ^ dest1 ) & WB_En1 & ~Is_Imm1 & |dest1;
-    assign shouldForwardMemFromExe = !( src2 ^ dest1 ) & WB_En1 & mem_W_En & |dest1;
+    assign shouldForward2FromExe = !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code)) & |dest1;
+    assign shouldForwardMemFromExe = !( src2 ^ dest1 ) & WB_En1 & mem_W_En  & |dest1;
     assign shouldForward1FromMem = !( src1 ^ dest2 ) & WB_En2 & |dest2;
-    assign shouldForward2FromMem = !( src2 ^ dest2 ) & WB_En2 & ~Is_Imm2 & |dest2;
+    assign shouldForward2FromMem = !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code)) & |dest2;
     assign shouldForwardMemFromMem = !( src2 ^ dest2 ) & WB_En2 & mem_W_En & |dest2;
     assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
     assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;

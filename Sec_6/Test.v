@@ -3,6 +3,7 @@ module test;
 	// registers and wires
 	reg				clk;
 	reg				rst;
+	reg				Sel;
 	wire	[5:0]	Instruction;
 	
 	// module under test
@@ -10,6 +11,7 @@ module test;
 	(
 		clk,
 		rst,
+		Sel,
 		Instruction
 	);
 	
@@ -19,6 +21,7 @@ module test;
 	
 	initial
 	begin
+		Sel = 0;
 				clk = 0; 	rst = 0;
 		#( 35 ) rst = 1;
 		#( 40 ) rst = 0;

@@ -5,9 +5,10 @@ module MEM_Stage
 		rst,
 		read,
 		write,
-		address,
+		aluResult,
 		readdata,
-		writedata
+		writedata,
+		wbData
 	);
 
 	// input and outputs
@@ -15,9 +16,10 @@ module MEM_Stage
 	input			rst;
 	input			read;
 	input			write;
-	input	[15:0]	address;
+	input	[31:0]	aluResult;
 	input	[31:0]	writedata;
 	output	[31:0]	readdata;
+	output	[31:0]	wbData;
 
 	// registers and wires
 	reg		[31:0]	registers[255:0];
@@ -29,13 +31,13 @@ module MEM_Stage
 	// memory address generator
 	MemAdd MA
 	(
-		.address_in(address),
+		.address_in(aluResult[15:0]),
 		.address(realaddress)
 	);
 
 	// read part
 	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
-
+	assign wbData = (read) ? readdata : aluResult;
 	// write part
 	always @(posedge clk)
 	begin
