@@ -30,9 +30,9 @@ module Hazard
 	parameter JMP_Code = 2'b11;
 	
 	// build module
-	assign Stall =	( !( src1 ^ dest1 ) & WB_En1 ) |
-					( !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code) )) |
-					( !( src1 ^ dest2 ) & WB_En2 )  |
-					( !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code) ));
+	assign Stall =	( |src1 & !( src1 ^ dest1 ) & WB_En1 ) |
+					( |src2 & !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) |
+					( |src1 & !( src1 ^ dest2 ) & WB_En2 )  |
+					( |src2 & !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) );
 	
 endmodule
