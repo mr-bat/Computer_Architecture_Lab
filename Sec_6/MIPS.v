@@ -29,6 +29,7 @@ module MIPS
 	wire			Is_Imm4;
 	wire            shouldForward11;
 	wire            shouldForward12;
+	wire			shouldForward1mem;
 	wire 			Branch_Taken;
 	wire			Stall;
 	wire	[1:0]	BR_Type1;
@@ -65,6 +66,7 @@ module MIPS
 	wire	[31:0]	Immediate3;
 	wire    [31:0]  forwardVal11;
 	wire    [31:0]  forwardVal12;
+	wire    [31:0]  memForwardVal;
 	wire	[31:0]	WB_Data;
 	wire	[31:0]	ALU_Result31;
 	wire	[31:0]	ALU_Result32;
@@ -183,18 +185,21 @@ module MIPS
             .BR_Type(BR_Type2), // Pass BR_Type through levels
             .WB_En1(WB_En32),
             .WB_En2(WB_En42),
+			.mem_W_En(MEM_W_En22),
             .Is_Imm1(Is_Imm3),
             .Is_Imm2(Is_Imm4),
             .src1(src12),
             .src2(src22),
+			.readdata2(readdata22),
             .dest1(dest3),
             .dest2(dest4),
             .aluResult1(ALU_Result32),
             .aluResult2(ALU_Result42),
-            .srcOut1(shouldForward11),
-            .srcOut2(shouldForward12),
-            .shouldForward1(forwardVal11),
-            .shouldForward2(forwardVal12)
+            .srcOut1(forwardVal11),
+            .srcOut2(forwardVal12),
+			.memOut(memForwardVal),
+            .shouldForward1(shouldForward11),
+            .shouldForward2(shouldForward12)
         );
 	EXE_Stage EXES
 		(
@@ -223,7 +228,7 @@ module MIPS
 			.WB_En_in(WB_En22),
 			.MEM_R_En_in(MEM_R_En22),
 			.MEM_W_En_in(MEM_W_En22),
-			.readdata_in(readdata22),
+			.readdata_in(memForwardVal),
 			.Is_Imm_in(Is_Imm2),
 			.Immediate_in(Immediate3),
 			.ALU_result_in(ALU_Result31),

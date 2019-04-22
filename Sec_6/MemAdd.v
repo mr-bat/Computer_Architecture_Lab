@@ -10,7 +10,7 @@ module MemAdd
 	output	[15:0] 	address;
 
 	//bild module
-	assign address = address_in - 16'h0400;
+	assign address = { 2'b0, address_in[15:2] } - 16'h0100;
 	
 endmodule
 
