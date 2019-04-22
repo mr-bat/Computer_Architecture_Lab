@@ -6,8 +6,12 @@ module EXE_Stage
 		readdata1,
 		readdata2,
 		Immediate,
+		shouldForward1,
+		shouldForward2,
 		PC_in,
 		data2,
+		forwardVal1,
+		forwardVal2,
 		branch_taken,
 		branch_address,
 		ALU_result
@@ -15,11 +19,15 @@ module EXE_Stage
 	
 	// input and output ports
 	output			branch_taken;
+	input           shouldForward1;
+	input           shouldForward2;
 	input 	[1:0]	BR_Type;
 	input 	[3:0]	EXE_Cmd;
 	input 	[31:0]	readdata1;
 	input 	[31:0]	readdata2;
 	input	[31:0]	data2;
+	input	[31:0]	forwardVal1;
+	input	[31:0]	forwardVal2;
 	input 	[31:0] 	Immediate;
 	input 	[31:0]	PC_in;
 	output	[31:0]	branch_address;
@@ -30,8 +38,8 @@ module EXE_Stage
 	// arithmetic logic unit module
 	ALU alu
 	(
-		.dataa(readdata1),
-		.datab(data2),
+		.dataa(shouldForward1 ? forwardVal1 : readdata1),
+		.datab(shouldForward2 ? forwardVal2 : data2),
 		.Function(EXE_Cmd),
 		.result(ALU_result)
 	);
@@ -43,8 +51,8 @@ module EXE_Stage
 	Condition_Check condition_check
 	(
 		.BR_Type(BR_Type),
-		.readdata1(readdata1),
-		.readdata2(readdata2),
+		.readdata1(shouldForward1 ? forwardVal1 : readdata1),
+		.readdata2(shouldForward2 ? forwardVal2 : readdata2),
 		.branch_taken(branch_taken)
 	);
 endmodule

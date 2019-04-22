@@ -23,7 +23,12 @@ module MIPS
 	wire			MEM_W_En21;
 	wire			MEM_W_En22;
 	wire			MEM_W_En32;
-	wire			Is_Imm;
+	wire			Is_Imm1;
+	wire			Is_Imm2;
+	wire			Is_Imm3;
+	wire			Is_Imm4;
+	wire            shouldForward11;
+	wire            shouldForward12;
 	wire 			Branch_Taken;
 	wire			Stall;
 	wire	[1:0]	BR_Type1;
@@ -58,6 +63,8 @@ module MIPS
 	wire	[31:0]	Immediate1;
 	wire	[31:0]	Immediate2;
 	wire	[31:0]	Immediate3;
+	wire    [31:0]  forwardVal11;
+	wire    [31:0]  forwardVal12;
 	wire	[31:0]	WB_Data;
 	wire	[31:0]	ALU_Result31;
 	wire	[31:0]	ALU_Result32;
@@ -107,7 +114,7 @@ module MIPS
 			.WB_En(WB_En21),
 			.MEM_R_En(MEM_R_En21),
 			.MEM_W_En(MEM_W_En21),
-			.Is_Imm(Is_Imm),
+			.Is_Imm(Is_Imm1),
 			.BR_Type(BR_Type1),
 			.EXE_Cmd(EXE_Cmd1),
 			.readdata1(readdata11),
@@ -125,7 +132,7 @@ module MIPS
 			.BR_Type(BR_Type1),
 			.WB_En1(WB_En22),
 			.WB_En2(WB_En32),
-			.Is_Imm(Is_Imm),
+			.Is_Imm(Is_Imm1),
 			.src1(src11),
 			.src2(src21),
 			.dest1(dest2),
@@ -141,6 +148,7 @@ module MIPS
 			.branch_taken(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
+			.Is_Imm_in(Is_Imm1),
 			.Immediate_in(Immediate1),
 			.data1_in(data11),
 			.data2_in(data21),
@@ -155,20 +163,39 @@ module MIPS
 			.src2_in(src21),
 			.readdata1(readdata12),
 			.readdata2(readdata22),
+			.Is_Imm(Is_Imm2),
 			.Immediate(Immediate2),
 			.data1(data12),
 			.data2(data22),
+			.src1(src12),
+			.src2(src22),
 			.dest(dest2),
 			.WB_En(WB_En22),
 			.MEM_R_En(MEM_R_En22),
 			.MEM_W_En(MEM_W_En22),
 			.BR_Type(BR_Type2),
 			.EXE_Cmd(EXE_Cmd2),
-			.PC(PC2),
-			.src1(src12),
-			.src2(src22)
+			.PC(PC2)
 		);
 	// execution
+	ForwardUnit FU
+	    (
+            .BR_Type(BR_Type2), // Pass BR_Type through levels
+            .WB_En1(WB_En32),
+            .WB_En2(WB_En42),
+            .Is_Imm1(Is_Imm3),
+            .Is_Imm2(Is_Imm4),
+            .src1(src12),
+            .src2(src22),
+            .dest1(dest3),
+            .dest2(dest4),
+            .aluResult1(ALU_Result32),
+            .aluResult2(ALU_Result42),
+            .srcOut1(shouldForward11),
+            .srcOut2(shouldForward12),
+            .shouldForward1(forwardVal11),
+            .shouldForward2(forwardVal12)
+        );
 	EXE_Stage EXES
 		(
 			.BR_Type(BR_Type2),
@@ -180,13 +207,11 @@ module MIPS
 			.branch_taken(Branch_Taken),
 			.PC_in(PC11),
 			.branch_address(Branch_Address),
-			.ALU_result(ALU_Result31)
-			.Exe_dest(dest2),
-			.Exe_WB(WB_En32),
-			.Exe_ALU_result(ALU_Result32),
-			.Mem_dest(dest3),
-			.Mem_WB(WB_En42),
-			.Mem_ALU_result(ALU_Result42),
+			.ALU_result(ALU_Result31),
+            .shouldForward1(shouldForward11),
+            .shouldForward2(shouldForward12),
+            .forwardVal1(forwardVal11),
+            .forwardVal2(forwardVal12)
 		);
 	// execution register
 	EXE_Stage_reg EXER
@@ -199,6 +224,7 @@ module MIPS
 			.MEM_R_En_in(MEM_R_En22),
 			.MEM_W_En_in(MEM_W_En22),
 			.readdata_in(readdata22),
+			.Is_Imm_in(Is_Imm2),
 			.Immediate_in(Immediate3),
 			.ALU_result_in(ALU_Result31),
 			.dest_in(dest2),
@@ -206,6 +232,7 @@ module MIPS
 			.MEM_R_En(MEM_R_En32),
 			.MEM_W_En(MEM_W_En32),
 			.readdata(readdata23),
+			.Is_Imm(Is_Imm3),
 			.Immediate(Immediate3),
 			.ALU_result(ALU_Result32),
 			.dest(dest3)
@@ -230,11 +257,13 @@ module MIPS
 			.PC(PC4),
 			.WB_En_in(WB_En32),
 			.MEM_R_En_in(MEM_R_En32),
-			.ALU_result_in(ALU_Result32),
+			.Is_Imm_in(Is_Imm3),
+        	.ALU_result_in(ALU_Result32),
 			.Mem_Data_in(Mem_Data1),
 			.dest_in(dest3),
 			.WB_En(WB_En42),
 			.MEM_R_En(MEM_R_En42),
+			.Is_Imm(Is_Imm4),
 			.ALU_result(ALU_Result42),
 			.Mem_Data(Mem_Data2),
 			.dest(dest4)

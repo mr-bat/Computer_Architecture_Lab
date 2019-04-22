@@ -31,8 +31,8 @@ module Hazard
 	
 	// build module
 	assign Stall =	( !( src1 ^ dest1 ) & WB_En1 ) |
-					( !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) |
+					( !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code) )) |
 					( !( src1 ^ dest2 ) & WB_En2 )  |
-					( !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) );
+					( !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code) ));
 	
 endmodule
