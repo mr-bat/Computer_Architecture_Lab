@@ -6,9 +6,14 @@ module MEM_Stage
 		read,
 		write,
 		aluResult,
-		readdata,
 		writedata,
-		wbData
+		SRAM_NOT_READY,
+		SRAMaddress,
+		SRAMWEn,
+		SRAMOE,
+		readdata,
+		wbData,
+		SRAMdata,
 	);
 
 	// input and outputs
@@ -16,10 +21,15 @@ module MEM_Stage
 	input			rst;
 	input			read;
 	input			write;
+	input 			SRAMWEn;
+	input			SRAMOE;
 	input	[31:0]	aluResult;
 	input	[31:0]	writedata;
+	input	[17:0]	SRAMaddress;
+	output			SRAM_NOT_READY;
 	output	[31:0]	readdata;
 	output	[31:0]	wbData;
+	inout	[15:0]	SRAMdata;
 
 	// registers and wires
 	reg		[31:0]	registers[255:0];
@@ -36,15 +46,30 @@ module MEM_Stage
 	);
 
 	// read part
-	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+	SRAM_CTR sram
+		(
+			.clk(clk),
+			.MEM_R_EN(read),
+			.MEM_W_EN(write),
+			.rst(rst),
+			.SRAMaddress(SRAMaddress),
+			.SRAMWEn(SRAMWEn),
+			.SRAMOE(SRAMOE),
+			.SRAMdata(SRAMdata),
+			.SRAM_NOT_READY(SRAM_NOT_READY),
+			.writeData(writedata),
+			.address(realaddress),
+			.readData(readData)
+		);
+//	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
 	assign wbData = (read) ? readdata : aluResult;
 	// write part
-	always @(posedge clk)
+	/* always @(posedge clk)
 	begin
 		if(write)
 		begin
 			registers[realaddress] <= writedata;
 		end
-	end
+	end */
 
 endmodule
