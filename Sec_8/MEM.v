@@ -61,15 +61,18 @@ module MEM_Stage
 			.address(realaddress),
 			.readData(readData)
 		);
-//	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+
+	// assign SRAM_NOT_READY = 1'b0;
+	// assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
 	assign wbData = (read) ? readdata : aluResult;
+
 	// write part
-	/* always @(posedge clk)
-	begin
-		if(write)
-		begin
-			registers[realaddress] <= writedata;
-		end
-	end */
+	// always @(posedge clk)
+	// begin
+	// 	if(write)
+	// 	begin
+	// 		registers[realaddress] <= writedata;
+	// 	end
+	// end
 
 endmodule

@@ -13,7 +13,7 @@ module Hazard
 		dest2,
 		Stall
 	);
-	
+
 	// define input and output ports
 	input			Sel;
 	input			WB_En1;
@@ -27,19 +27,34 @@ module Hazard
 	input	[4:0]	dest2;
 	output			Stall;
 
-	// define branch types	
+	// wires and registers
+	wire        shouldForward1FromExe;
+	wire        shouldForward2FromExe;
+	wire        shouldForward1FromMem;
+	wire        shouldForward2FromMem;
+	wire		shouldForwardMemFromExe;
+	wire		shouldForwardMemFromMem;
+
+	// define branch types
 	parameter NO_BRANCH_Code = 2'b0;
 	parameter BEZ_Code = 2'b01;
 	parameter BNE_Code = 2'b10;
 	parameter JMP_Code = 2'b11;
-	
+
+	assign shouldForward1FromExe = !( src1 ^ dest1 ) & WB_En1 & |dest1;
+	assign shouldForward2FromExe = !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code)) & |dest1;
+	// assign shouldForwardMemFromExe = !( src2 ^ dest1 ) & WB_En1 & mem_W_En  & |dest1;
+	assign shouldForward1FromMem = ((!( src1 ^ dest2 )) & WB_En2) & (|dest2);
+	assign shouldForward2FromMem = ((!( src2 ^ dest2 )) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code))) & |dest2;
+	// assign shouldForwardMemFromMem = !( src2 ^ dest2 ) & WB_En2 & mem_W_En & |dest2;
+	assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
+	assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
+
 	// build module
 	assign Stall = (
-					( ( |src1 & !( src1 ^ dest1 ) & WB_En1 ) |
-					( |src2 & !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) ) |
-					( |src1 & !( src1 ^ dest2 ) & WB_En2 )  |
-					( |src2 & !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code) ) ) ) &
-					Sel
-				   ) | SRAM_NOT_READY ;
-	
+						shouldForward1 |
+						shouldForward2 &
+						Sel
+				  ) | SRAM_NOT_READY ;
+
 endmodule

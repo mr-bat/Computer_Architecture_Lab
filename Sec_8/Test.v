@@ -6,20 +6,28 @@ module test;
 	reg				rst;
 	reg				Sel;
 	wire	[5:0]	Instruction;
-	
+	wire 	[17:0] SRAMaddress;
+	wire SRAMWEn;
+	wire SRAMOE;
+	wire [15:0] SRAMdata;
+
 	// module under test
 	MIPS UUT
 	(
 		clk,
 		rst,
 		Sel,
+		SRAMaddress, 	//	SRAM Address bus 18 Bits
+		SRAMWEn, 		//	SRAM Write Enable
+		SRAMOE, 		// 	SRAM Output Enable
+		SRAMdata, 		//	SRAM Data bus 16 Bits
 		Instruction
 	);
-	
+
 	// write a test
-	
+
 	initial repeat (900) #(10) clk = ~clk;
-	
+
 	initial
 	begin
 				clk = 0; 	rst = 0;	Sel = 0;
@@ -29,5 +37,5 @@ module test;
 		#( 35 ) rst = 1;
 		#( 40 ) rst = 0;
 	end
-	
+
 endmodule
