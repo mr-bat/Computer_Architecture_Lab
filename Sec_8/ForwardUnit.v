@@ -21,12 +21,10 @@ module ForwardUnit
 		shouldForward1,
 		shouldForward2,
 	);
-	
+
 	// define input and output ports
 	input			WB_En1;
 	input			WB_En2;
-	//input			Is_Imm1;
-	//input			Is_Imm2;
 	input			Is_Imm;
 	input			mem_W_En;
 	input	[1:0]	BR_Type;
@@ -54,7 +52,7 @@ module ForwardUnit
 	reg	[31:0]	srcOut2;
 	reg	[31:0]	memOut;
 
-	// define branch types	
+	// define branch types
 	parameter NO_BRANCH_Code = 2'b0;
 	parameter BEZ_Code = 2'b01;
 	parameter BNE_Code = 2'b10;
@@ -90,7 +88,7 @@ module ForwardUnit
             begin
                 srcOut2 <= aluResult2;
             end
-		
+
 		if (shouldForwardMemFromExe)
 			memOut <= aluResult1;
 		else
@@ -100,4 +98,3 @@ module ForwardUnit
 				memOut <= readdata2;
 	end
 endmodule
-

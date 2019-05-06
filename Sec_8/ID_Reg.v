@@ -36,7 +36,7 @@ module ID_Stage_reg
 		EXE_Cmd,
 		PC
 	);
-	
+
 	// input and output ports
 	input			clk;
 	input			rst;
@@ -72,7 +72,7 @@ module ID_Stage_reg
 	output 	[31:0]	data1;
 	output 	[31:0]	data2;
 	output	[31:0]	PC;
-	
+
 	// registers
 	reg 	[1:0]	BR_Type;
 	reg 	[3:0]	EXE_Cmd;
@@ -89,13 +89,13 @@ module ID_Stage_reg
 	reg 			MEM_R_En;
 	reg 			MEM_W_En;
 	reg		[31:0]	PC;
-	
+
 	// build module
-	
+
 	// pass instruction decode outputs
 	always @(posedge clk)
 	begin
-		if(rst | branch_taken | stall)
+		if(rst | branch_taken)
 		begin
 			dest <= 5'b0;
 			readdata1 <= 32'b0;
@@ -116,23 +116,26 @@ module ID_Stage_reg
 		end
 		else
 		begin
-			dest <= dest_in;
-			readdata1 <= readdata1_in;
-			readdata2 <= readdata2_in;
-			Is_Imm <= Is_Imm_in;
-			Immediate <= Immediate_in;
-			data1 <= data1_in;
-			data2 <= data2_in;
-			WB_En <= WB_En_in;
-			MEM_R_En <= MEM_R_En_in;
-			MEM_W_En <= MEM_W_En_in;
-			BR_Type <= BR_Type_in;
-			EXE_Cmd <= EXE_Cmd_in;
-			PC <= PC_in;
-			src1 <= src1_in;
-			src2 <= src2_in;
-			dest <= dest_in;
+			if (~stall)
+			begin
+				dest <= dest_in;
+				readdata1 <= readdata1_in;
+				readdata2 <= readdata2_in;
+				Is_Imm <= Is_Imm_in;
+				Immediate <= Immediate_in;
+				data1 <= data1_in;
+				data2 <= data2_in;
+				WB_En <= WB_En_in;
+				MEM_R_En <= MEM_R_En_in;
+				MEM_W_En <= MEM_W_En_in;
+				BR_Type <= BR_Type_in;
+				EXE_Cmd <= EXE_Cmd_in;
+				PC <= PC_in;
+				src1 <= src1_in;
+				src2 <= src2_in;
+				dest <= dest_in;
+			end
 		end
 	end
-	
+
 endmodule

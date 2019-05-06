@@ -13,13 +13,13 @@ module MIPS
 	);
 
 	// input and outputs
-	input			clk;
-	input			rst;
-	input			Sel;
-	output  	SRAMWEn;
-	output 		SRAMOE;
+	input					clk;
+	input					rst;
+	input					Sel;
+	output  			SRAMWEn;
+	output 				SRAMOE;
 	output [17:0]	SRAMaddress;
-	output	[5:0]	Instruction;
+	output [5:0]	Instruction;
 	inout	[15:0]	SRAMdata;
 
 	// wires
@@ -237,6 +237,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.PC_in(PC2),
 			.PC(PC3),
 			.WB_En_in(WB_En22),
@@ -278,6 +279,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.PC_in(PC3),
 			.PC(PC4),
 			.WB_En_in(WB_En32),

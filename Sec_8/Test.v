@@ -5,12 +5,13 @@ module test;
 	reg				clk;
 	reg				rst;
 	reg				Sel;
-	wire	[5:0]	Instruction;
-	wire 	[17:0] SRAMaddress;
-	wire SRAMWEn;
-	wire SRAMOE;
-	wire [15:0] SRAMdata;
+	wire  			SRAMWEn;
+	wire 				SRAMOE;
+	wire 	[17:0]	SRAMaddress;
+	wire 	[5:0]	Instruction;
+	wire 	[15:0]	SRAMdata;
 
+	assign SRAMdata = (~SRAMOE) ? 16'h0400 : {16{1'bz}};
 	// module under test
 	MIPS UUT
 	(

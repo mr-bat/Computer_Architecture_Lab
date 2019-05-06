@@ -34,7 +34,7 @@ module SRAM_CTR
 	localparam READ_2 = 2;
 	localparam WRITE_1 = 3;
 	localparam WAIT = 4;
-	
+
 	// wire and registers
 	reg 			SRAMWEn;
 	reg				SRAMOE;
@@ -47,11 +47,11 @@ module SRAM_CTR
 	reg		[2:0]	nextState;
 	reg		[15:0]	readData_L;
 	reg		[15:0]	readData_H;
-	
+
 	// build module
 	assign SRAM_NOT_READY = |counter | InnerStall;
 	assign readData = { readData_H, readData_L };
-	
+
 	always @(posedge clk) begin
 		if (rst)
 		begin
@@ -85,7 +85,7 @@ module SRAM_CTR
 			end
 		end
 	end
-	
+
 	// controller
 	always @( posedge clk )
 	begin
@@ -94,7 +94,7 @@ module SRAM_CTR
 		else
 			presentState <= nextState;
 	end
-	
+
 	always @(*) begin
 		case (presentState)
 			INIT:
@@ -135,11 +135,10 @@ module SRAM_CTR
 				end
 		endcase
 	end
-	
+
 	reg [15:0] data_to_sram;
 	always @( * )
 	begin
-	data_to_sram = 0;
 		case( presentState )
 			INIT:
 			begin
@@ -150,6 +149,7 @@ module SRAM_CTR
 					InnerStall = 1'b1;
 					SRAMWEn = 1'b1;
 					SRAMOE = 1'b0;
+					data_to_sram = 0;
 				end
 				else
 				begin
@@ -165,6 +165,7 @@ module SRAM_CTR
 						InnerStall = 1'b0;
 						SRAMWEn = 1'b1;
 						SRAMOE = 1'b1;
+						data_to_sram = 0;
 					end
 				end
 			end
@@ -174,6 +175,7 @@ module SRAM_CTR
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
 				SRAMOE = 1'b0;
+				data_to_sram = 0;
 			end
 			READ_2:
 			begin
@@ -181,6 +183,7 @@ module SRAM_CTR
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
 				SRAMOE = 1'b1;
+				data_to_sram = 0;
 			end
 			WRITE_1:
 			begin
@@ -196,11 +199,11 @@ module SRAM_CTR
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
 				SRAMOE = 1'b1;
+				data_to_sram = 0;
 			end
 		endcase
 	end
-	
-	assign SRAMdata = ((presentState == WRITE_1) || ((presentState == INIT) && (MEM_W_EN == 1))) ?  data_to_sram : {16{1'bz}} ; 
-	
-endmodule
 
+	assign SRAMdata = (~(|(presentState ^ WRITE_1)) || (~(|(presentState ^ INIT)) && (MEM_W_EN == 1))) ?  data_to_sram : {16{1'bz}} ;
+
+endmodule

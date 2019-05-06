@@ -3,6 +3,7 @@ module MEM_Stage_reg
 	(
 			clk,
 			rst,
+			stall,
 			PC_in,
 			PC,
 			WB_En_in,
@@ -18,10 +19,11 @@ module MEM_Stage_reg
 			ALU_result,
 			Mem_Data
 	);
-	
+
 	// input and output ports
 	input			clk;
 	input			rst;
+	input 		stall;
 	input			WB_En_in;
 	input			MEM_R_En_in;
 	input           Is_Imm_in;
@@ -36,7 +38,7 @@ module MEM_Stage_reg
 	output	[31:0]	PC;
 	output	[31:0]	ALU_result;
 	output	[31:0]	Mem_Data;
-	
+
 	// registers
 	reg				WB_En;
 	reg				MEM_R_En;
@@ -45,7 +47,7 @@ module MEM_Stage_reg
 	reg		[31:0]	PC;
 	reg		[31:0]	ALU_result;
 	reg		[31:0]	Mem_Data;
-	
+
 	// build module
 	always @(posedge clk)
 	begin
@@ -61,14 +63,16 @@ module MEM_Stage_reg
 		end
 		else
 		begin
-			WB_En <= WB_En_in;
-			MEM_R_En <= MEM_R_En_in;
-			Is_Imm <= Is_Imm_in;
-			dest <= dest_in;
-			PC <= PC_in;
-			ALU_result <= ALU_result_in;
-			Mem_Data <= Mem_Data_in;
+			if (~stall) begin
+				WB_En <= WB_En_in;
+				MEM_R_En <= MEM_R_En_in;
+				Is_Imm <= Is_Imm_in;
+				dest <= dest_in;
+				PC <= PC_in;
+				ALU_result <= ALU_result_in;
+				Mem_Data <= Mem_Data_in;
+			end
 		end
 	end
-	
+
 endmodule
