@@ -4,6 +4,7 @@ module EXE_Stage_reg
 			clk,
 			rst,
 			stall,
+			superStall,
 			PC_in,
 			WB_En_in,
 			MEM_R_En_in,
@@ -28,6 +29,7 @@ module EXE_Stage_reg
 	input			clk;
 	input			rst;
 	input 		stall;
+	input 		superStall;
 	input			WB_En_in;
 	input			MEM_R_En_in;
 	input			MEM_W_En_in;
@@ -75,7 +77,7 @@ module EXE_Stage_reg
 		end
 		else
 		begin
-			if (~stall) begin
+			if (~superStall) begin
 				dest <= dest_in;
 				PC <= PC_in;
 				WB_En <= WB_En_in;
@@ -84,7 +86,7 @@ module EXE_Stage_reg
 				Is_Imm <= Is_Imm_in;
 				readdata <= readdata_in;
 				Immediate <= Immediate_in;
-				ALU_result <= ALU_result_in;				
+				ALU_result <= ALU_result_in;
 			end
 		end
 	end

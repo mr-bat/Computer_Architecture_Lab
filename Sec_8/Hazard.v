@@ -11,7 +11,8 @@ module Hazard
 		src2,
 		dest1,
 		dest2,
-		Stall
+		Stall,
+		superStall
 	);
 
 	// define input and output ports
@@ -26,12 +27,13 @@ module Hazard
 	input	[4:0]	dest1;
 	input	[4:0]	dest2;
 	output			Stall;
+	output 			superStall;
 
 	// wires and registers
-	wire        shouldForward1FromExe;
-	wire        shouldForward2FromExe;
-	wire        shouldForward1FromMem;
-	wire        shouldForward2FromMem;
+	wire    shouldForward1FromExe;
+	wire    shouldForward2FromExe;
+	wire    shouldForward1FromMem;
+	wire    shouldForward2FromMem;
 	wire		shouldForwardMemFromExe;
 	wire		shouldForwardMemFromMem;
 
@@ -51,10 +53,8 @@ module Hazard
 	assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
 
 	// build module
-	assign Stall = (
-						shouldForward1 |
-						shouldForward2 &
-						Sel
-				  ) | SRAM_NOT_READY ;
+	assign Stall = ( shouldForward1 | shouldForward2) & Sel;
+	assign superStall = SRAM_NOT_READY;
+
 
 endmodule

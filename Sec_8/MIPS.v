@@ -44,6 +44,7 @@ module MIPS
 	wire 			Branch_Taken;
 	wire			SRAM_NOT_READY;
 	wire			Stall;
+	wire 			superStall;
 	wire	[1:0]	BR_Type1;
 	wire	[1:0]	BR_Type2;
 	wire	[4:0]	src11;
@@ -110,6 +111,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.superStall(superStall),
 			.branch_taken(Branch_Taken),
 			.Instruction_in(Instruction1),
 			.PC_in(PC11),
@@ -154,7 +156,8 @@ module MIPS
 			.src2(src21),
 			.dest1(dest2),
 			.dest2(dest3),
-			.Stall(Stall)
+			.Stall(Stall),
+			.superStall(superStall)
 		);
 	// instruction decode register
 	ID_Stage_reg IDR
@@ -162,6 +165,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.superStall(superStall),
 			.branch_taken(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
@@ -238,6 +242,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.superStall(superStall),
 			.PC_in(PC2),
 			.PC(PC3),
 			.WB_En_in(WB_En22),
@@ -280,6 +285,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.superStall(superStall),
 			.PC_in(PC3),
 			.PC(PC4),
 			.WB_En_in(WB_En32),

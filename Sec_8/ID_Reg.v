@@ -4,6 +4,7 @@ module ID_Stage_reg
 		clk,
 		rst,
 		stall,
+		superStall,
 		branch_taken,
 		src1_in,
 		src2_in,
@@ -41,6 +42,7 @@ module ID_Stage_reg
 	input			clk;
 	input			rst;
 	input			stall;
+	input 		superStall;
 	input			branch_taken;
 	input 			WB_En_in;
 	input 			MEM_R_En_in;
@@ -116,7 +118,7 @@ module ID_Stage_reg
 		end
 		else
 		begin
-			if (~stall)
+			if (~stall | ~superStall)
 			begin
 				dest <= dest_in;
 				readdata1 <= readdata1_in;

@@ -4,6 +4,7 @@ module MEM_Stage_reg
 			clk,
 			rst,
 			stall,
+			superStall,
 			PC_in,
 			PC,
 			WB_En_in,
@@ -24,6 +25,7 @@ module MEM_Stage_reg
 	input			clk;
 	input			rst;
 	input 		stall;
+	input 		superStall;
 	input			WB_En_in;
 	input			MEM_R_En_in;
 	input           Is_Imm_in;
@@ -63,7 +65,7 @@ module MEM_Stage_reg
 		end
 		else
 		begin
-			if (~stall) begin
+			if (~superStall) begin
 				WB_En <= WB_En_in;
 				MEM_R_En <= MEM_R_En_in;
 				Is_Imm <= Is_Imm_in;
