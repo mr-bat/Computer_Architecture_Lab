@@ -22,7 +22,7 @@ module SRAM_CTR
 	output 			SRAMWEn;
 	output			SRAMOE;
 	output	[17:0]	SRAMaddress;
-	output	[31:0]	writeData;
+	input	[31:0]	writeData;
 	input	[15:0]	address;
 	output			SRAM_NOT_READY;
 	output	[31:0]	readData;
@@ -39,7 +39,6 @@ module SRAM_CTR
 	reg 			SRAMWEn;
 	reg				SRAMOE;
 	reg		[17:0]	SRAMaddress;
-	reg		[31:0]	writeData;
 
 	reg				InnerStall;
 	reg 	[2:0] 	counter;
@@ -77,7 +76,7 @@ module SRAM_CTR
 		begin
 			if( InnerStall )
 			begin
-				counter <= 3'h6;
+				counter <= 3'h5;
 			end
 			if( ~InnerStall & |counter )
 			begin
