@@ -76,7 +76,7 @@ module SRAM_CTR
 		begin
 			if( InnerStall )
 			begin
-				counter <= 3'h5;
+				counter <= 3'h4;
 			end
 			if( ~InnerStall & |counter )
 			begin
