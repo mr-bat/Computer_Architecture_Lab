@@ -6,22 +6,22 @@ module MIPS
 		rst,
 		Sel,
 		SRAMaddress, 	//	SRAM Address bus 18 Bits
-		SRAMWEn, 		//	SRAM Write Enable	
+		SRAMWEn, 		//	SRAM Write Enable
 		SRAMOE, 		// 	SRAM Output Enable
 		SRAMdata, 		//	SRAM Data bus 16 Bits
 		Instruction
 	);
-	
+
 	// input and outputs
-	input			clk;
-	input			rst;
-	input			Sel;
-	input 			SRAMWEn;
-	input			SRAMOE;
-	input	[17:0]	SRAMaddress;
-	output	[5:0]	Instruction;
+	input					clk;
+	input					rst;
+	input					Sel;
+	output  			SRAMWEn;
+	output 				SRAMOE;
+	output [17:0]	SRAMaddress;
+	output [5:0]	Instruction;
 	inout	[15:0]	SRAMdata;
-	
+
 	// wires
 	wire 			WB_En21;
 	wire			WB_En22;
@@ -86,12 +86,12 @@ module MIPS
 	wire	[31:0]	ALU_Result42;
 	wire	[31:0]	Mem_Data1;
 	wire	[31:0]	Mem_Data2;
-	
+
 	// assemble modules
-	
+
 	// output
 	assign Instruction = Instruction1[31:26];
-	
+
 	// instruction fetch
 	IF_Stage IFS
 		(
@@ -103,7 +103,7 @@ module MIPS
 			.branch_taken(Branch_Taken),
 			.PC(PC11)
 		);
-		
+
 	// instruction fetch register
 	IF_Stage_reg IFR
 		(
@@ -116,7 +116,7 @@ module MIPS
 			.Instruction(Instruction2),
 			.PC(PC12)
 		);
-		
+
 	// instruction decode
 	ID_Stage IDS
 		(
@@ -237,6 +237,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.PC_in(PC2),
 			.PC(PC3),
 			.WB_En_in(WB_En22),
@@ -278,6 +279,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.PC_in(PC3),
 			.PC(PC4),
 			.WB_En_in(WB_En32),
@@ -301,5 +303,5 @@ module MIPS
 			.Mem_Data(Mem_Data2),
 			.WB_Data(WB_Data)
 		);
-	
+
 endmodule
