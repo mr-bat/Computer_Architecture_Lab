@@ -40,7 +40,7 @@ module IF_Stage_reg
 		end
 		else
 		begin
-			if( ~stall | ~superStall )
+			if( ~stall & ~superStall )
 			begin
 				Instruction <= Instruction_in;
 				PC <= PC_in;

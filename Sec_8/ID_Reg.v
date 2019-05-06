@@ -118,7 +118,7 @@ module ID_Stage_reg
 		end
 		else
 		begin
-			if (~stall | ~superStall)
+			if (~stall & ~superStall)
 			begin
 				dest <= dest_in;
 				readdata1 <= readdata1_in;

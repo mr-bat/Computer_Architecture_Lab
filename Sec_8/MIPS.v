@@ -99,6 +99,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.superStall(superStall),
 			.branch_address(Branch_Address),
 			.Instruction(Instruction1),
 			.branch_taken(Branch_Taken),
