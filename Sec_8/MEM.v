@@ -21,11 +21,11 @@ module MEM_Stage
 	input			rst;
 	input			read;
 	input			write;
-	input 			SRAMWEn;
-	input			SRAMOE;
+	output 		SRAMWEn;
+	output 		SRAMOE;
 	input	[31:0]	aluResult;
 	input	[31:0]	writedata;
-	input	[17:0]	SRAMaddress;
+	output [17:0]	SRAMaddress;
 	output			SRAM_NOT_READY;
 	output	[31:0]	readdata;
 	output	[31:0]	wbData;
