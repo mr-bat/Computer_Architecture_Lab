@@ -56,5 +56,7 @@ $RECYCLE.BIN/
 */incremental_db/*
 */output_files/*
 ./*/*.qsf
+./*/*.mpf
+./*/*.stp
 ./*/*,qwf
 # End of https://www.gitignore.io/api/windows,modelsimdb/[D[D[D*/db/*
