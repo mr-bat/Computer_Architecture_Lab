@@ -48,16 +48,16 @@ module SRAM_CTR
 	assign SRAM_NOT_READY = |counter | InnerStall;
 	assign readData = { readData_H, readData_L };
 
-	always @(posedge clk) begin
+	always @(negedge clk) begin
 		if (rst)
 		begin
 			readData_L <= 16'b0;
 			readData_H <= 16'b0;
 		end
 		else
-			if ( presentState == READ_1 )
+			if ( !(presentState ^ READ_1) )
 				readData_L <= SRAMdata;
-			if ( presentState == READ_2 )
+			if ( !(presentState ^ READ_2) )
 				readData_H <= SRAMdata;
 		begin
 		end
