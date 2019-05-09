@@ -44,8 +44,8 @@ module ForwardUnit
 	wire        shouldForward2FromExe;
 	wire        shouldForward1FromMem;
 	wire        shouldForward2FromMem;
-	wire		shouldForwardMemFromExe;
-	wire		shouldForwardMemFromMem;
+	wire		shouldForwardMemWriteFromExe;
+	wire		shouldForwardMemWriteFromMem;
 	reg	[31:0]	srcOut1;
 	reg	[31:0]	srcOut2;
 	reg	[31:0]	memOut;
@@ -58,10 +58,10 @@ module ForwardUnit
 
   assign shouldForward1FromExe = !( src1 ^ dest1 ) & WB_En1 & |dest1;
   assign shouldForward2FromExe = !( src2 ^ dest1 ) & WB_En1 & (~Is_Imm | !(BR_Type ^ BNE_Code)) & |dest1;
-  assign shouldForwardMemFromExe = !( src2 ^ dest1 ) & WB_En1 & mem_W_En  & |dest1;
+  assign shouldForwardMemWriteFromExe = !( src2 ^ dest1 ) & WB_En1 & mem_W_En & |dest1; //st
   assign shouldForward1FromMem = !( src1 ^ dest2 ) & WB_En2 & |dest2;
   assign shouldForward2FromMem = !( src2 ^ dest2 ) & WB_En2 & (~Is_Imm | !(BR_Type ^ BNE_Code)) & |dest2;
-  assign shouldForwardMemFromMem = !( src2 ^ dest2 ) & WB_En2 & mem_W_En & |dest2;
+  assign shouldForwardMemWriteFromMem = !( src2 ^ dest2 ) & WB_En2 & mem_W_En & |dest2; //st
   assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
   assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
 	// build module
@@ -87,10 +87,10 @@ module ForwardUnit
                 srcOut2 <= aluResult2;
             end
 
-		if (shouldForwardMemFromExe)
+		if (shouldForwardMemWriteFromExe)
 			memOut <= aluResult1;
 		else
-			if (shouldForwardMemFromMem)
+			if (shouldForwardMemWriteFromMem)
 				memOut <= aluResult2;
 			else
 				memOut <= readdata2;
