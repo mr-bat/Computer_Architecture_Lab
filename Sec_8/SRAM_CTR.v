@@ -2,12 +2,11 @@
 module SRAM_CTR
 	(
 		clk,
+		rst,
 		MEM_R_EN,
 		MEM_W_EN,
-		rst,
 		SRAMaddress,
 		SRAMWEn,
-		SRAMOE,
 		SRAMdata,
 		SRAM_NOT_READY,
 		writeData,
@@ -20,7 +19,6 @@ module SRAM_CTR
 	input			MEM_W_EN;
 	input			rst;
 	output 			SRAMWEn;
-	output			SRAMOE;
 	output	[17:0]	SRAMaddress;
 	input	[31:0]	writeData;
 	input	[15:0]	address;
@@ -37,15 +35,14 @@ module SRAM_CTR
 
 	// wire and registers
 	reg 			SRAMWEn;
-	reg				SRAMOE;
 	reg		[17:0]	SRAMaddress;
-
 	reg				InnerStall;
 	reg 	[2:0] 	counter;
 	reg		[2:0]	presentState;
 	reg		[2:0]	nextState;
 	reg		[15:0]	readData_L;
 	reg		[15:0]	readData_H;
+	reg 	[15:0] data_to_sram;
 
 	// build module
 	assign SRAM_NOT_READY = |counter | InnerStall;
@@ -60,7 +57,7 @@ module SRAM_CTR
 		else
 			if ( presentState == READ_1 )
 				readData_L <= SRAMdata;
-			else if ( presentState == READ_2 )
+			if ( presentState == READ_2 )
 				readData_H <= SRAMdata;
 		begin
 		end
@@ -135,74 +132,67 @@ module SRAM_CTR
 		endcase
 	end
 
-	reg [15:0] data_to_sram;
-	always @( * )
+	always @(*)
 	begin
-		case( presentState )
+		case(presentState)
 			INIT:
 			begin
-				SRAMaddress = { 1'b0, address, 1'b0 };
-
 				if (MEM_R_EN)
 				begin
 					InnerStall = 1'b1;
 					SRAMWEn = 1'b1;
-					SRAMOE = 1'b0;
-					data_to_sram = 0;
+					SRAMaddress = { 1'b0, address, 1'b0 };
+					data_to_sram = {16{1'bz}};
 				end
 				else
 				begin
 					if (MEM_W_EN)
 					begin
 						InnerStall = 1'b1;
-						data_to_sram = writeData[15:0];
 						SRAMWEn = 1'b0;
-						SRAMOE = 1'b1;
+						SRAMaddress = { 1'b0, address, 1'b0 };
+						data_to_sram = writeData[15:0];
 					end
 					else
 					begin
 						InnerStall = 1'b0;
 						SRAMWEn = 1'b1;
-						SRAMOE = 1'b1;
-						data_to_sram = 0;
+						SRAMaddress = { 1'b0, address, 1'b0 };
+						data_to_sram = {16{1'bz}};
 					end
 				end
 			end
 			READ_1:
 			begin
-				SRAMaddress = { 1'b0, address, 1'b1 };
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
-				SRAMOE = 1'b0;
-				data_to_sram = 0;
+				SRAMaddress = { 1'b0, address, 1'b1 };
+				data_to_sram = {16{1'bz}};
 			end
 			READ_2:
 			begin
-				SRAMaddress = { 1'b0, address, 1'b1 };
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
-				SRAMOE = 1'b1;
-				data_to_sram = 0;
+				SRAMaddress = { 1'b0, address, 1'b1 };
+				data_to_sram = {16{1'bz}};
 			end
 			WRITE_1:
 			begin
-				SRAMaddress = { 1'b0, address, 1'b1 };
 				InnerStall = 1'b0;
-				data_to_sram = writeData[31:16];
 				SRAMWEn = 1'b0;
-				SRAMOE = 1'b1;
+				SRAMaddress = { 1'b0, address, 1'b1 };
+				data_to_sram = writeData[31:16];
 			end
 			WAIT:
 			begin
-				SRAMaddress = { 1'b0, address, 1'b1 };
 				InnerStall = 1'b0;
 				SRAMWEn = 1'b1;
-				SRAMOE = 1'b1;
-				data_to_sram = 0;
+				SRAMaddress = { 1'b0, address, 1'b1 };
+				data_to_sram = {16{1'bz}};
 			end
 		endcase
 	end
 
-	assign SRAMdata = (~(|(presentState ^ WRITE_1)) || (~(|(presentState ^ INIT)) && (MEM_W_EN == 1))) ?  data_to_sram : {16{1'bz}} ;
+	assign SRAMdata = data_to_sram;
 
 endmodule

@@ -10,7 +10,6 @@ module MEM_Stage
 		SRAM_NOT_READY,
 		SRAMaddress,
 		SRAMWEn,
-		SRAMOE,
 		readdata,
 		wbData,
 		SRAMdata,
@@ -22,7 +21,6 @@ module MEM_Stage
 	input			read;
 	input			write;
 	output 		SRAMWEn;
-	output 		SRAMOE;
 	input	[31:0]	aluResult;
 	input	[31:0]	writedata;
 	output [17:0]	SRAMaddress;
@@ -54,16 +52,15 @@ module MEM_Stage
 			.rst(rst),
 			.SRAMaddress(SRAMaddress),
 			.SRAMWEn(SRAMWEn),
-			.SRAMOE(SRAMOE),
 			.SRAMdata(SRAMdata),
 			.SRAM_NOT_READY(SRAM_NOT_READY),
 			.writeData(writedata),
 			.address(realaddress),
-			.readData(readData)
+			.readData(readdata)
 		);
 
 	// assign SRAM_NOT_READY = 1'b0;
-	// assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+	//assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
 	assign wbData = (read) ? readdata : aluResult;
 
 	// write part

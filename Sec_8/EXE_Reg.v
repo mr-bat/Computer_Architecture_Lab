@@ -3,7 +3,6 @@ module EXE_Stage_reg
 	(
 			clk,
 			rst,
-			stall,
 			superStall,
 			PC_in,
 			WB_En_in,
@@ -28,7 +27,6 @@ module EXE_Stage_reg
 	// input and output ports
 	input			clk;
 	input			rst;
-	input 		stall;
 	input 		superStall;
 	input			WB_En_in;
 	input			MEM_R_En_in;

@@ -6,10 +6,8 @@ module MIPS
 		rst,
 		Sel,
 		SRAMaddress, 	//	SRAM Address bus 18 Bits
-		SRAMWEn, 		//	SRAM Write Enable
-		SRAMOE, 		// 	SRAM Output Enable
+		SRAMWEn, 			//	SRAM Write Enable
 		SRAMdata, 		//	SRAM Data bus 16 Bits
-		Instruction
 	);
 
 	// input and outputs
@@ -17,9 +15,7 @@ module MIPS
 	input					rst;
 	input					Sel;
 	output  			SRAMWEn;
-	output 				SRAMOE;
 	output [17:0]	SRAMaddress;
-	output [5:0]	Instruction;
 	inout	[15:0]	SRAMdata;
 
 	// wires
@@ -38,9 +34,8 @@ module MIPS
 	wire			Is_Imm2;
 	wire			Is_Imm3;
 	wire			Is_Imm4;
-	wire            shouldForward11;
-	wire            shouldForward12;
-	wire			shouldForward1mem;
+	wire      shouldForward11;
+	wire      shouldForward12;
 	wire 			Branch_Taken;
 	wire			SRAM_NOT_READY;
 	wire			Stall;
@@ -89,9 +84,6 @@ module MIPS
 	wire	[31:0]	Mem_Data2;
 
 	// assemble modules
-
-	// output
-	assign Instruction = Instruction1[31:26];
 
 	// instruction fetch
 	IF_Stage IFS
@@ -199,7 +191,6 @@ module MIPS
 			.EXE_Cmd(EXE_Cmd2),
 			.PC(PC2)
 		);
-	// execution
 	ForwardUnit FU
 	    (
             .BR_Type(BR_Type2), // Pass BR_Type through levels
@@ -220,6 +211,7 @@ module MIPS
             .shouldForward1(shouldForward11),
             .shouldForward2(shouldForward12)
         );
+	// execution
 	EXE_Stage EXES
 		(
 			.BR_Type(BR_Type2),
@@ -242,7 +234,6 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
-			.stall(Stall),
 			.superStall(superStall),
 			.PC_in(PC2),
 			.PC(PC3),
@@ -276,7 +267,6 @@ module MIPS
 			.wbData(WB_Data0),
 			.SRAMaddress( SRAMaddress ),
 			.SRAMWEn( SRAMWEn ),
-			.SRAMOE( SRAMOE ),
 			.SRAM_NOT_READY( SRAM_NOT_READY ),
 			.SRAMdata( SRAMdata )
 		);
@@ -285,7 +275,6 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
-			.stall(Stall),
 			.superStall(superStall),
 			.PC_in(PC3),
 			.PC(PC4),
