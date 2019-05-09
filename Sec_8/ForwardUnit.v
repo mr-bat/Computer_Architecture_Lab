@@ -5,6 +5,7 @@ module ForwardUnit
 		WB_En1,
 		WB_En2,
 		mem_W_En,
+		MEM_R_En,
 		Is_Imm,
 		src1,
 		src2,
@@ -25,6 +26,7 @@ module ForwardUnit
 	input			WB_En2;
 	input			Is_Imm;
 	input			mem_W_En;
+	input			mem_R_En;
 	input	[1:0]	BR_Type;
 	input	[4:0]	src1;
 	input	[4:0]	src2;
@@ -35,6 +37,7 @@ module ForwardUnit
 	input	[31:0]	aluResult2;
 	output 			shouldForward1;
 	output 			shouldForward2;
+	output  		loadForwardStall;
 	output	[31:0]	srcOut1;
 	output	[31:0]	srcOut2;
 	output	[31:0]	memOut;
@@ -64,6 +67,8 @@ module ForwardUnit
   assign shouldForwardMemWriteFromMem = !( src2 ^ dest2 ) & WB_En2 & mem_W_En & |dest2; //st
   assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
   assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
+
+	assign loadForwardStall = !( src2 ^ dest1 ) & WB_En1 & mem_R_En & |dest1;
 	// build module
 	always @(*)
 	begin

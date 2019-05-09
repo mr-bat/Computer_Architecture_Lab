@@ -39,6 +39,7 @@ module MIPS
 	wire 			Branch_Taken;
 	wire			SRAM_NOT_READY;
 	wire			Stall;
+	wire 			loadForwardStall;
 	wire 			superStall;
 	wire	[1:0]	BR_Type1;
 	wire	[1:0]	BR_Type2;
@@ -91,6 +92,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.loadForwardStall(loadForwardStall),
 			.superStall(superStall),
 			.branch_address(Branch_Address),
 			.Instruction(Instruction1),
@@ -104,6 +106,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.loadForwardStall(loadForwardStall),
 			.superStall(superStall),
 			.branch_taken(Branch_Taken),
 			.Instruction_in(Instruction1),
@@ -158,6 +161,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
+			.loadForwardStall(loadForwardStall),
 			.superStall(superStall),
 			.branch_taken(Branch_Taken),
 			.readdata1_in(readdata11),
@@ -192,25 +196,27 @@ module MIPS
 			.PC(PC2)
 		);
 	ForwardUnit FU
-	    (
-            .BR_Type(BR_Type2), // Pass BR_Type through levels
-            .WB_En1(WB_En32),
-            .WB_En2(WB_En42),
+    (
+      .BR_Type(BR_Type2), // Pass BR_Type through levels
+      .WB_En1(WB_En32),
+      .WB_En2(WB_En42),
 			.mem_W_En(MEM_W_En22),
-            .Is_Imm(Is_Imm2),
-            .src1(src12),
-            .src2(src22),
+			.MEM_R_En(MEM_R_En22),
+      .Is_Imm(Is_Imm2),
+      .src1(src12),
+      .src2(src22),
 			.readdata2(readdata22),
-            .dest1(dest3),
-            .dest2(dest4),
-            .aluResult1(WB_Data0),
-            .aluResult2(WB_Data),
-            .srcOut1(forwardVal11),
-            .srcOut2(forwardVal12),
+      .dest1(dest3),
+      .dest2(dest4),
+      .aluResult1(WB_Data0),
+      .aluResult2(WB_Data),
+      .srcOut1(forwardVal11),
+      .srcOut2(forwardVal12),
 			.memOut(memForwardVal),
-            .shouldForward1(shouldForward11),
-            .shouldForward2(shouldForward12)
-        );
+      .shouldForward1(shouldForward11),
+      .shouldForward2(shouldForward12),
+			.loadForwardStall(loadForwardStall)
+    );
 	// execution
 	EXE_Stage EXES
 		(
@@ -234,6 +240,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.loadForwardStall(loadForwardStall),
 			.superStall(superStall),
 			.PC_in(PC2),
 			.PC(PC3),

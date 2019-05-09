@@ -309,7 +309,7 @@ MIPS UUT
 		.Sel(SW[1]),
 		.SRAMdata( SRAM_DQ ),							//	SRAM Data bus 16 Bits
 		.SRAMaddress( SRAM_ADDR ),				//	SRAM Address bus 18 Bits
-		.SRAMWEn( SRAM_WE_N ),						//	SRAM Write Enable
+		.SRAMWEn( SRAM_WE_N ) 						//	SRAM Write Enable
 	);
 
 	assign SRAM_UB_N = 1'b0;			//	SRAM High-byte Data Mask
