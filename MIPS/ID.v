@@ -45,9 +45,6 @@ module ID_Stage
 	output 	[31:0]	data1;
 	output 	[31:0]	data2;
 	
-	// wires and register
-	wire 			Is_Imm;
-	
 	// build module
 	
 	// control unit

@@ -4,6 +4,7 @@ module IF_Stage
 		clk,
 		rst,
 		stall,
+		loadForwardStall,
 		Instruction,
 		branch_taken,
 		branch_address,
@@ -14,6 +15,7 @@ module IF_Stage
 	input			clk;
 	input			rst;
 	input			stall;
+	input 		loadForwardStall;
 	input 			branch_taken;
 	input	[31:0]	branch_address;
 	output	[31:0]	Instruction;
@@ -35,7 +37,7 @@ module IF_Stage
 			if(branch_taken)
 				PC <= branch_address;
 			else
-				if( ~stall )
+				if( ~stall & ~loadForwardStall )
 					PC <= PC + 4;
 		end
 	end

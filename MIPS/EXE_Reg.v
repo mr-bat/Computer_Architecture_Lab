@@ -3,6 +3,7 @@ module EXE_Stage_reg
 	(
 			clk,
 			rst,
+			loadForwardStall,
 			PC_in,
 			WB_En_in,
 			MEM_R_En_in,
@@ -26,6 +27,7 @@ module EXE_Stage_reg
 	// input and output ports
 	input			clk;
 	input			rst;
+	input 			loadForwardStall;
 	input			WB_En_in;
 	input			MEM_R_En_in;
 	input			MEM_W_En_in;
@@ -73,15 +75,18 @@ module EXE_Stage_reg
 		end
 		else
 		begin
-			dest <= dest_in;
-			PC <= PC_in;
-			WB_En <= WB_En_in;
-			MEM_R_En <= MEM_R_En_in;
-			MEM_W_En <= MEM_W_En_in;
-			Is_Imm <= Is_Imm_in;
-			readdata <= readdata_in;
-			Immediate <= Immediate_in;
-			ALU_result <= ALU_result_in;
+			if (~loadForwardStall)
+			begin
+				dest <= dest_in;
+				PC <= PC_in;
+				WB_En <= WB_En_in;
+				MEM_R_En <= MEM_R_En_in;
+				MEM_W_En <= MEM_W_En_in;
+				Is_Imm <= Is_Imm_in;
+				readdata <= readdata_in;
+				Immediate <= Immediate_in;
+				ALU_result <= ALU_result_in;
+			end
 		end
 	end
 	

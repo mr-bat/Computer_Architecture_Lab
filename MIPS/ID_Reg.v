@@ -4,6 +4,7 @@ module ID_Stage_reg
 		clk,
 		rst,
 		stall,
+		loadForwardStall,
 		Flush,
 		src1_in,
 		src2_in,
@@ -41,6 +42,7 @@ module ID_Stage_reg
 	input			clk;
 	input			rst;
 	input			stall;
+	input	 		loadForwardStall;
 	input 			Flush;
 	input 			WB_En_in;
 	input 			MEM_R_En_in;
@@ -116,21 +118,24 @@ module ID_Stage_reg
 		end
 		else
 		begin
-			dest <= dest_in;
-			readdata1 <= readdata1_in;
-			readdata2 <= readdata2_in;
-			Is_Imm <= Is_Imm_in;
-			Immediate <= Immediate_in;
-			data1 <= data1_in;
-			data2 <= data2_in;
-			WB_En <= WB_En_in;
-			MEM_R_En <= MEM_R_En_in;
-			MEM_W_En <= MEM_W_En_in;
-			BR_Type <= BR_Type_in;
-			EXE_Cmd <= EXE_Cmd_in;
-			PC <= PC_in;
-			src1 <= src1_in;
-			src2 <= src2_in;
+			if (~loadForwardStall)
+			begin
+				dest <= dest_in;
+				readdata1 <= readdata1_in;
+				readdata2 <= readdata2_in;
+				Is_Imm <= Is_Imm_in;
+				Immediate <= Immediate_in;
+				data1 <= data1_in;
+				data2 <= data2_in;
+				WB_En <= WB_En_in;
+				MEM_R_En <= MEM_R_En_in;
+				MEM_W_En <= MEM_W_En_in;
+				BR_Type <= BR_Type_in;
+				EXE_Cmd <= EXE_Cmd_in;
+				PC <= PC_in;
+				src1 <= src1_in;
+				src2 <= src2_in;
+			end
 		end
 	end
 
