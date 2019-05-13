@@ -6,16 +6,16 @@ module ALU
 		Function,
 		result
 	);
-	
+
 	// input and output ports
 	input	[31:0]	dataa;
 	input	[31:0]	datab;
 	input	[3:0]	Function;
 	output	[31:0]	result;
-	
+
 	// registers
 	reg		[31:0]	result;
-	
+
 	// define parameters
 	parameter	[3:0]	ADD = 4'b0000;
 	parameter	[3:0]	SUB = 4'b0010;
@@ -26,9 +26,9 @@ module ALU
 	parameter	[3:0]	SL = 4'b1000;
 	parameter	[3:0]	SRA = 4'b1001;
 	parameter	[3:0]	SRL = 4'b1010;
-	
+
 	// build module
-	
+
 	always @(*)
 	begin
 		case(Function)
@@ -45,11 +45,11 @@ module ALU
 			XOR:
 				result = dataa ^ datab;
 			SL:
-				result = (dataa << datab);
+				result = dataa << datab;
 			SRL:
-				result = {{32{dataa[31]}}, dataa} >> datab;
+				result = dataa >> datab;
 			SRA:
-				result = {32'b0, dataa} >> datab;
+				result = dataa >>> datab;
 			default:
 				result = {32{1'bx}};
 		endcase
