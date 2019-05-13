@@ -1,17 +1,27 @@
 // build a module for assembling
+// FPGA: EP2C35F672C6
 module MIPS
 	(
 		clk,
 		rst,
+		sel,
 		Instruction
 	);
+
+	// parameters
+	parameter BNE_Code = 2'b10;
 
 	// input and outputs
 	input			clk;
 	input			rst;
+	input 		sel;
 	output	[5:0]	Instruction;
 
 	// wires
+	wire    shouldForward1FromExe;
+	wire    shouldForward2FromExe;
+	wire    shouldForward1FromMem;
+	wire    shouldForward2FromMem;
 	wire 			WB_En21;
 	wire			WB_En22;
 	wire			WB_En32;
@@ -23,9 +33,16 @@ module MIPS
 	wire			MEM_W_En21;
 	wire			MEM_W_En22;
 	wire			MEM_W_En32;
+	wire			Is_Imm1;
+	wire			Is_Imm2;
 	wire 			Branch_Taken;
+	wire			Stall;
 	wire	[1:0]	BR_Type1;
 	wire	[1:0]	BR_Type2;
+	wire	[4:0]	src11;
+	wire	[4:0]	src21;
+	wire	[4:0]	src12;
+	wire	[4:0]	src22;
 	wire	[4:0]	dest1;
 	wire	[4:0]	dest2;
 	wire	[4:0]	dest3;
@@ -67,6 +84,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.branch_address(Branch_Address),
 			.Instruction(Instruction1),
 			.branch_taken(Branch_Taken),
@@ -77,6 +95,7 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.Flush(Branch_Taken),
 			.Instruction_in(Instruction1),
 			.PC_in(PC11),
@@ -95,6 +114,7 @@ module MIPS
 			.WB_En(WB_En21),
 			.MEM_R_En(MEM_R_En21),
 			.MEM_W_En(MEM_W_En21),
+			.Is_Imm(Is_Imm1),
 			.BR_Type(BR_Type1),
 			.EXE_Cmd(EXE_Cmd1),
 			.readdata1(readdata11),
@@ -102,6 +122,8 @@ module MIPS
 			.Immediate(Immediate1),
 			.data1(data11),
 			.data2(data21),
+			.src1(src11),
+			.src2(src21),
 			.dest(dest1)
 		);
 
@@ -109,9 +131,11 @@ module MIPS
 		(
 			.clk(clk),
 			.rst(rst),
+			.stall(Stall),
 			.Flush(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
+			.Is_Imm_in(Is_Imm1),
 			.Immediate_in(Immediate1),
 			.data1_in(data11),
 			.data2_in(data21),
@@ -122,11 +146,16 @@ module MIPS
 			.BR_Type_in(BR_Type1),
 			.EXE_Cmd_in(EXE_Cmd1),
 			.PC_in(PC12),
+			.src1_in(src11),
+			.src2_in(src21),
 			.readdata1(readdata12),
 			.readdata2(readdata22),
+			.Is_Imm(Is_Imm2),
 			.Immediate(Immediate2),
 			.data1(data12),
 			.data2(data22),
+			.src1(src12),
+			.src2(src22),
 			.dest(dest2),
 			.WB_En(WB_En22),
 			.MEM_R_En(MEM_R_En22),
@@ -171,6 +200,18 @@ module MIPS
 			.ALU_result(ALU_Result32),
 			.dest(dest3)
 		);
+
+
+	assign shouldForward1FromExe = !( src11 ^ dest2 ) & WB_En22 & |dest2;
+	assign shouldForward2FromExe = !( src21 ^ dest2 ) & WB_En22 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code)) & |dest2;
+	assign shouldForward1FromMem = (!( src11 ^ dest3 )) & WB_En32 & (|dest3);
+	assign shouldForward2FromMem = ((!( src21 ^ dest3 )) & WB_En32 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code))) & |dest3;
+	assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
+	assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
+
+	// build module
+	assign Stall = ( shouldForward1 | shouldForward2) & sel;
+
 
 	MEM_Stage MEMS // memory
 		(

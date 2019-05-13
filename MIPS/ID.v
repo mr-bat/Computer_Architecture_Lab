@@ -10,6 +10,7 @@ module ID_Stage
 		WB_En,
 		MEM_R_En,
 		MEM_W_En,
+		Is_Imm,
 		BR_Type,
 		EXE_Cmd,
 		readdata1,
@@ -17,6 +18,8 @@ module ID_Stage
 		Immediate,
 		data1,
 		data2,
+		src1,
+		src2,
 		dest
 	);
 	
@@ -30,8 +33,11 @@ module ID_Stage
 	output 			WB_En;
 	output 			MEM_R_En;
 	output 			MEM_W_En;
+	output			Is_Imm;
 	output 	[1:0]	BR_Type;
 	output 	[3:0] 	EXE_Cmd;
+	output 	[4:0]	src1;
+	output 	[4:0]	src2;
 	output 	[4:0]	dest;
 	output	[31:0]	readdata1;
 	output	[31:0]	readdata2;
@@ -61,8 +67,8 @@ module ID_Stage
 	(
 		.clk(clk),
 		.rst(rst),
-		.readaddress1(Instruction_in[25:21]),
-		.readaddress2(Instruction_in[20:16]),
+		.readaddress1(src1),
+		.readaddress2(src2),
 		.writeaddress(lastDestination),
 		.writedata(writedata),
 		.write(write),
@@ -78,6 +84,10 @@ module ID_Stage
 	
 	// data 2 mux
 	assign data2 = (Is_Imm) ? Immediate : readdata2;
+	
+	// sources
+	assign src1 = 	Instruction_in[25:21];
+	assign src2 = 	Instruction_in[20:16];
 	
 	// destination
 	assign dest = (Is_Imm) ? Instruction_in[20:16] : Instruction_in[15:11];

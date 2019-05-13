@@ -3,6 +3,7 @@ module IF_Stage_reg
 	(
 		clk,
 		rst,
+		stall,
 		Flush,
 		Instruction_in,
 		PC_in,
@@ -13,6 +14,7 @@ module IF_Stage_reg
 	// input and outputs
 	input			clk;
 	input			rst;
+	input			stall;
 	input 		Flush;
 	input	[31:0]	Instruction_in;
 	input	[31:0]	PC_in;
@@ -36,8 +38,11 @@ module IF_Stage_reg
 		end
 		else
 		begin
-			Instruction <= Instruction_in;
-			PC <= PC_in;
+			if( ~stall )
+			begin
+				Instruction <= Instruction_in;
+				PC <= PC_in;
+			end
 		end
 	end
 
