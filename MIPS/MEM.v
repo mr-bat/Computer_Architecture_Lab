@@ -32,7 +32,7 @@ module MEM_Stage
 		.address(realaddress)
 	);
 
-	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+	assign readdata = (read & realaddress[15:8]) ? {32{1'bx}} : (read) ? registers[realaddress[7:0]] : 32'b0;
 
 	integer i ;
 	always @(posedge clk)
