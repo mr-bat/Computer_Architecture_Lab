@@ -201,17 +201,14 @@ module MIPS
 			.dest(dest3)
 		);
 
-
+	// hazard unit ditection
 	assign shouldForward1FromExe = !( src11 ^ dest2 ) & WB_En22 & |dest2;
 	assign shouldForward2FromExe = !( src21 ^ dest2 ) & WB_En22 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code)) & |dest2;
-	assign shouldForward1FromMem = (!( src11 ^ dest3 )) & WB_En32 & (|dest3);
-	assign shouldForward2FromMem = ((!( src21 ^ dest3 )) & WB_En32 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code))) & |dest3;
+	assign shouldForward1FromMem = !( src11 ^ dest3 ) & WB_En32 & |dest3;
+	assign shouldForward2FromMem = !( src21 ^ dest3 ) & WB_En32 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code)) & |dest3;
 	assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem;
 	assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem;
-
-	// build module
-	assign Stall = ( shouldForward1 | shouldForward2) & sel;
-
+	assign Stall = (shouldForward1 | shouldForward2) & sel;
 
 	MEM_Stage MEMS // memory
 		(
