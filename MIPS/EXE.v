@@ -12,7 +12,7 @@ module EXE_Stage
 		branch_address,
 		ALU_result
 	);
-	
+
 	// input and output ports
 	output			branch_taken;
 	input 	[1:0]	BR_Type;
@@ -24,9 +24,9 @@ module EXE_Stage
 	input 	[31:0]	PC_in;
 	output	[31:0]	branch_address;
 	output	[31:0]	ALU_result;
-	
+
 	// build module
-	
+
 	// arithmetic logic unit module
 	ALU alu
 	(
@@ -35,10 +35,10 @@ module EXE_Stage
 		.Function(EXE_Cmd),
 		.result(ALU_result)
 	);
-	
+
 	// address selector
-	assign branch_address = ({Immediate[31], (Immediate[30:0] << 2)} + 4 + PC_in);
-	
+	assign branch_address = (Immediate <<< 2) - 4 + PC_in;
+
 	// branch codition
 	Condition_Check condition_check
 	(

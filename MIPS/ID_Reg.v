@@ -3,6 +3,7 @@ module ID_Stage_reg
 	(
 		clk,
 		rst,
+		Flush,
 		dest_in,
 		readdata1_in,
 		readdata2_in,
@@ -28,10 +29,11 @@ module ID_Stage_reg
 		EXE_Cmd,
 		PC
 	);
-	
+
 	// input and output ports
 	input			clk;
 	input			rst;
+	input 		Flush;
 	input 			WB_En_in;
 	input 			MEM_R_En_in;
 	input 			MEM_W_En_in;
@@ -56,7 +58,7 @@ module ID_Stage_reg
 	output 	[31:0]	data1;
 	output 	[31:0]	data2;
 	output	[31:0]	PC;
-	
+
 	// registers
 	reg 	[1:0]	BR_Type;
 	reg 	[3:0]	EXE_Cmd;
@@ -70,13 +72,13 @@ module ID_Stage_reg
 	reg 			MEM_R_En;
 	reg 			MEM_W_En;
 	reg		[31:0]	PC;
-	
+
 	// build module
-	
+
 	// pass instruction decode outputs
 	always @(posedge clk)
 	begin
-		if(rst)
+		if(rst | Flush)
 		begin
 			dest <= 5'b0;
 			readdata1 <= 32'b0;
@@ -107,5 +109,5 @@ module ID_Stage_reg
 			PC <= PC_in;
 		end
 	end
-	
+
 endmodule

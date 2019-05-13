@@ -5,12 +5,12 @@ module MIPS
 		rst,
 		Instruction
 	);
-	
+
 	// input and outputs
 	input			clk;
 	input			rst;
 	output	[5:0]	Instruction;
-	
+
 	// wires
 	wire 			WB_En21;
 	wire			WB_En22;
@@ -58,14 +58,12 @@ module MIPS
 	wire	[31:0]	ALU_Result42;
 	wire	[31:0]	Mem_Data1;
 	wire	[31:0]	Mem_Data2;
-	
+
 	// assemble modules
-	
-	// output
-	assign Instruction = Instruction1[31:26];
-	
-	// instruction fetch
-	IF_Stage IFS
+
+	assign Instruction = Instruction1[31:26]; // output
+
+	IF_Stage IFS // instruction fetch
 		(
 			.clk(clk),
 			.rst(rst),
@@ -74,20 +72,19 @@ module MIPS
 			.branch_taken(Branch_Taken),
 			.PC(PC11)
 		);
-		
-	// instruction fetch register
-	IF_Stage_reg IFR
+
+	IF_Stage_reg IFR // instruction fetch register
 		(
 			.clk(clk),
 			.rst(rst),
+			.Flush(Branch_Taken),
 			.Instruction_in(Instruction1),
 			.PC_in(PC11),
 			.Instruction(Instruction2),
 			.PC(PC12)
 		);
-		
-	// instruction decode
-	ID_Stage IDS
+
+	ID_Stage IDS // instruction decode
 		(
 			.clk(clk),
 			.rst(rst),
@@ -107,11 +104,12 @@ module MIPS
 			.data2(data21),
 			.dest(dest1)
 		);
-	// instruction decode register
-	ID_Stage_reg IDR
+
+	ID_Stage_reg IDR // instruction decode register
 		(
 			.clk(clk),
 			.rst(rst),
+			.Flush(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
 			.Immediate_in(Immediate1),
@@ -137,8 +135,8 @@ module MIPS
 			.EXE_Cmd(EXE_Cmd2),
 			.PC(PC2)
 		);
-	// execution
-	EXE_Stage EXES
+
+	EXE_Stage EXES // execution
 		(
 			.BR_Type(BR_Type2),
 			.EXE_Cmd(EXE_Cmd2),
@@ -151,8 +149,8 @@ module MIPS
 			.branch_address(Branch_Address),
 			.ALU_result(ALU_Result31)
 		);
-	// execution register
-	EXE_Stage_reg EXER
+
+	EXE_Stage_reg EXER	// execution register
 		(
 			.clk(clk),
 			.rst(rst),
@@ -173,8 +171,8 @@ module MIPS
 			.ALU_result(ALU_Result32),
 			.dest(dest3)
 		);
-	// memory
-	MEM_Stage MEMS
+
+	MEM_Stage MEMS // memory
 		(
 			.clk(clk),
 			.rst(rst),
@@ -184,8 +182,8 @@ module MIPS
 			.readdata(Mem_Data1),
 			.writedata(readdata23)
 		);
-	// memory register
-	MEM_Stage_reg MEMR
+
+	MEM_Stage_reg MEMR	// memory register
 		(
 			.clk(clk),
 			.rst(rst),
@@ -202,16 +200,13 @@ module MIPS
 			.Mem_Data(Mem_Data2),
 			.dest(dest4)
 		);
-	// writeback
-	reg [31:0] Mem_Data3;
-	always@(posedge clk)
-		Mem_Data3 <= Mem_Data2;
-	WB_Stage WBS
+
+	WB_Stage WBS	// writeback
 		(
 			.MEM_R_En(MEM_R_En42),
 			.ALU_result(ALU_Result42),
 			.Mem_Data(Mem_Data2),
 			.WB_Data(WB_Data)
 		);
-	
+
 endmodule

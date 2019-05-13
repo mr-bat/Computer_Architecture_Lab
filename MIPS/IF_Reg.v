@@ -3,31 +3,33 @@ module IF_Stage_reg
 	(
 		clk,
 		rst,
+		Flush,
 		Instruction_in,
 		PC_in,
 		Instruction,
 		PC
 	);
-	
+
 	// input and outputs
 	input			clk;
 	input			rst;
+	input 		Flush;
 	input	[31:0]	Instruction_in;
 	input	[31:0]	PC_in;
 	output	[31:0]	Instruction;
 	output	[31:0]	PC;
 
-	
+
 	// registers
 	reg		[31:0]	Instruction;
 	reg		[31:0]	PC;
-	
+
 	// build module
-	
+
 	// transition	between
 	always @(posedge clk)
 	begin
-		if(rst)
+		if(rst | Flush)
 		begin
 			Instruction <= 32'b0;
 			PC <= 32'b0;
@@ -38,5 +40,5 @@ module IF_Stage_reg
 			PC <= PC_in;
 		end
 	end
-	
+
 endmodule
