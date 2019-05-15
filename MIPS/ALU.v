@@ -47,9 +47,9 @@ module ALU
 			SL:
 				result = dataa << datab;
 			SRL:
-				result = dataa >> datab;
+				result = {{32{dataa[31]}}, dataa} >> datab;
 			SRA:
-				result = dataa >>> datab;
+				result = {32'b0, dataa} >> datab;
 			default:
 				result = {32{1'bx}};
 		endcase
