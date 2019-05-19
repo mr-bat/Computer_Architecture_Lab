@@ -222,13 +222,19 @@ module MIPS
 		);
 
 	// hazard unit
-	assign shouldStallBy1FromExe = !( src11 ^ dest2 ) & WB_En22 & |dest2;
-	assign shouldStallBy2FromExe = !( src21 ^ dest2 ) & WB_En22 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code)) & |dest2;
-	assign shouldStallBy1FromMem = !( src11 ^ dest3 ) & WB_En32 & |dest3;
-	assign shouldStallBy2FromMem = !( src21 ^ dest3 ) & WB_En32 & (~Is_Imm1 | !(BR_Type1 ^ BNE_Code)) & |dest3;
+	assign shouldStallBy1FromExe = !(src11 ^ dest2) & WB_En22 & |dest2;
+	assign shouldStallBy2FromExe = !(src21 ^ dest2) & WB_En22 & ~Is_Imm1 & |dest2;
+	assign shouldStallBy1FromMem = !(src11 ^ dest3) & WB_En32 & |dest3;
+	assign shouldStallBy2FromMem = !(src21 ^ dest3) & WB_En32 & ~Is_Imm1 & |dest3;
+	assign shouldStallByStoreFromExe = !(src21 ^ dest2) & WB_En22 & MEM_W_En21 & |dest2;
+	assign shouldStallByStoreFromMem = !(src21 ^ dest3) & WB_En32 & MEM_W_En21 & |dest3;
+	assign shouldStallByBNEFromExe = !(src21 ^ dest2) & WB_En22 & !(BR_Type1 ^ BNE_Code) & |dest2;
+	assign shouldStallByBNEFromMem = !(src21 ^ dest3) & WB_En32 & !(BR_Type1 ^ BNE_Code) & |dest3;
 	assign shouldStallBy1 = shouldStallBy1FromExe | shouldStallBy1FromMem;
 	assign shouldStallBy2 = shouldStallBy2FromExe | shouldStallBy2FromMem;
-	assign Stall = (shouldStallBy1 | shouldStallBy2) & sel;
+	assign shouldStallByStore = shouldStallByStoreFromExe | shouldStallByStoreFromMem;
+	assign shouldStallByBNE = shouldStallByBNEFromExe | shouldStallByBNEFromMem;
+	assign Stall = (shouldStallBy1 | shouldStallBy2 | shouldStallByStore | shouldStallByBNE) & sel;
 
 	// forwarding unit
 	assign shouldForward1FromExe = !(src12 ^ dest3) & WB_En32 & |dest3;
