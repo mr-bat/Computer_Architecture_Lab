@@ -65,4 +65,3 @@ module MEM_Stage_reg
 	end
 
 endmodule
-}
