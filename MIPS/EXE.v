@@ -18,20 +18,20 @@ module EXE_Stage
 	);
 
 	// input and output ports
-	output			branch_taken;
-	input           shouldForward1;
-	input           shouldForward2;
-	input 	[1:0]	BR_Type;
-	input 	[3:0]	EXE_Cmd;
-	input 	[31:0]	readdata1;
-	input 	[31:0]	readdata2;
-	input	[31:0]	data2;
-	input	[31:0]	forwardVal1;
-	input	[31:0]	forwardVal2;
-	input 	[31:0] 	Immediate;
-	input 	[31:0]	PC_in;
-	output	[31:0]	branch_address;
-	output	[31:0]	ALU_result;
+	input shouldForward1;
+	input shouldForward2;
+	input [1:0]	BR_Type;
+	input [3:0]	EXE_Cmd;
+	input [31:0] readdata1;
+	input [31:0] readdata2;
+	input	[31:0] data2;
+	input	[31:0] forwardVal1;
+	input	[31:0] forwardVal2;
+	input [31:0] Immediate;
+	input [31:0] PC_in;
+	output	branch_taken;
+	output	[31:0] branch_address;
+	output	[31:0] ALU_result;
 
 	// wires and registers
 	wire [31:0] aluData1;
@@ -52,7 +52,7 @@ module EXE_Stage
 	);
 
 	// address selector
-	assign branch_address = (Immediate <<< 2) - 4 + PC_in;
+	assign branch_address = (Immediate << 2) - 4 + PC_in;
 
 	// branch codition
 	assign conditionCheckData1 = shouldForward1 ? forwardVal1 : readdata1;

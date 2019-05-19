@@ -6,24 +6,24 @@ module Condition_Check
 		readdata2,
 		branch_taken
 	);
-	
+
 	// input and output ports
-	input 	[1:0]	BR_Type;
+	input 	[1:0]		BR_Type;
 	input 	[31:0]	readdata1;
 	input 	[31:0]	readdata2;
-	output			branch_taken;
-	
+	output					branch_taken;
+
 	// wires and registers
 	reg				branch_taken;
-	
+
 	// define branch types
 	parameter NO_BRANCH = 2'b0;
 	parameter BEZ = 2'b01;
 	parameter BNE = 2'b10;
 	parameter JMP = 2'b11;
-	
+
 	// build module
-	
+
 	// pass instruction
 	always @(*)
 	begin
@@ -41,4 +41,3 @@ module Condition_Check
 		endcase
 	end
 endmodule
-

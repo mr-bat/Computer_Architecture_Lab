@@ -13,20 +13,20 @@ module IF_Stage_reg
 	);
 
 	// input and outputs
-	input			clk;
-	input			rst;
-	input			stall;
-	input 		loadForwardStall;
-	input 		Flush;
-	input	[31:0]	Instruction_in;
-	input	[31:0]	PC_in;
-	output	[31:0]	Instruction;
-	output	[31:0]	PC;
+	input	clk;
+	input	rst;
+	input	stall;
+	input loadForwardStall;
+	input Flush;
+	input	[31:0] Instruction_in;
+	input	[31:0] PC_in;
+	output [31:0]	Instruction;
+	output [31:0]	PC;
 
 
 	// registers
-	reg		[31:0]	Instruction;
-	reg		[31:0]	PC;
+	reg	[31:0] Instruction;
+	reg	[31:0] PC;
 
 	// build module
 
@@ -40,7 +40,7 @@ module IF_Stage_reg
 		end
 		else
 		begin
-			if( ~stall & ~loadForwardStall)
+			if(~stall & ~loadForwardStall)
 			begin
 				Instruction <= Instruction_in;
 				PC <= PC_in;

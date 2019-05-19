@@ -11,18 +11,18 @@ module MEM_Stage
 	);
 
 	// input and outputs
-	input			clk;
-	input			rst;
-	input			read;
-	input			write;
-	input	[15:0]	address;
-	input	[31:0]	writedata;
+	input						clk;
+	input						rst;
+	input						read;
+	input						write;
+	input		[15:0]	address;
+	input		[31:0]	writedata;
 	output	[31:0]	readdata;
 
 	// registers and wires
-	reg		[31:0]	registers[255:0];
+	reg			[31:0]	registers[255:0];
 
-	wire	[15:0]	realaddress;
+	wire		[15:0]	realaddress;
 
 	// build module
 

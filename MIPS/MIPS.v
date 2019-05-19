@@ -18,75 +18,81 @@ module MIPS
 	output	[5:0]	Instruction;
 
 	// wires
-	wire    shouldStallBy1FromExe;
-	wire    shouldStallBy2FromExe;
-	wire    shouldStallBy1FromMem;
-	wire    shouldStallBy2FromMem;
-	wire    shouldForward1FromExe;
-	wire    shouldForward2FromExe;
-	wire    shouldForward1FromMem;
-	wire    shouldForward2FromMem;
-	wire 			WB_En21;
-	wire			WB_En22;
-	wire			WB_En32;
-	wire			WB_En42;
-	wire			MEM_R_En21;
-	wire			MEM_R_En22;
-	wire			MEM_R_En32;
-	wire			MEM_R_En42;
-	wire			MEM_W_En21;
-	wire			MEM_W_En22;
-	wire			MEM_W_En32;
-	wire			Is_Imm1;
-	wire			Is_Imm2;
-	wire      shouldStallBy1;
-	wire      shouldStallBy2;
-	wire      shouldForward1;
-	wire      shouldForward2;
-	wire 			Branch_Taken;
-	wire			Stall;
-	wire 			loadForwardStall;
-	wire	[1:0]	BR_Type1;
-	wire	[1:0]	BR_Type2;
-	wire	[4:0]	src11;
-	wire	[4:0]	src21;
-	wire	[4:0]	src12;
-	wire	[4:0]	src22;
-	wire	[4:0]	dest1;
-	wire	[4:0]	dest2;
-	wire	[4:0]	dest3;
-	wire	[4:0]	dest4;
-	wire	[3:0]	EXE_Cmd1;
-	wire	[3:0]	EXE_Cmd2;
-	wire	[31:0]	PC11;
-	wire	[31:0]	PC12;
-	wire	[31:0]	PC2;
-	wire	[31:0]	PC3;
-	wire	[31:0]	PC4;
-	wire	[31:0]	Instruction1;
-	wire	[31:0]	Instruction2;
-	wire 	[31:0] 	Branch_Address;
-	wire	[31:0]	readdata11;
-	wire	[31:0]	readdata12;
-	wire	[31:0]	readdata21;
-	wire	[31:0]	readdata22;
-	wire	[31:0]	readdata22Forwarded;
-	wire	[31:0]	readdata23;
-	wire	[31:0]	data11;
-	wire	[31:0]	data12;
-	wire	[31:0]	data21;
-	wire	[31:0]	data22;
-	wire	[31:0]	Immediate1;
-	wire	[31:0]	Immediate2;
-	wire	[31:0]	Immediate3;
-	wire    [31:0]  forwardVal11;
-	wire    [31:0]  forwardVal12;
-	wire	[31:0]	WB_Data;
-	wire	[31:0]	ALU_Result31;
-	wire	[31:0]	ALU_Result32;
-	wire	[31:0]	ALU_Result42;
-	wire	[31:0]	Mem_Data1;
-	wire	[31:0]	Mem_Data2;
+	wire shouldStallBy1FromExe;
+	wire shouldStallBy2FromExe;
+	wire shouldStallBy1FromMem;
+	wire shouldStallBy2FromMem;
+	wire shouldStallByStoreFromExe;
+	wire shouldStallByStoreFromMem;
+	wire shouldStallByBNEFromExe;
+	wire shouldStallByBNEFromMem;
+	wire shouldStallBy1;
+	wire shouldStallBy2;
+	wire shouldStallByStore;
+	wire shouldStallByBNE;
+	wire shouldForward1FromExe;
+	wire shouldForward2FromExe;
+	wire shouldForward1FromMem;
+	wire shouldForward2FromMem;
+	wire shouldForward1;
+	wire shouldForward2;
+	wire WB_En21;
+	wire WB_En22;
+	wire WB_En32;
+	wire WB_En42;
+	wire MEM_R_En21;
+	wire MEM_R_En22;
+	wire MEM_R_En32;
+	wire MEM_R_En42;
+	wire MEM_W_En21;
+	wire MEM_W_En22;
+	wire MEM_W_En32;
+	wire Is_Imm1;
+	wire Is_Imm2;
+	wire Branch_Taken;
+	wire Stall;
+	wire loadForwardStall;
+	wire [1:0] BR_Type1;
+	wire [1:0] BR_Type2;
+	wire [3:0] EXE_Cmd1;
+	wire [3:0] EXE_Cmd2;
+	wire [4:0] src11;
+	wire [4:0] src21;
+	wire [4:0] src12;
+	wire [4:0] src22;
+	wire [4:0] dest1;
+	wire [4:0] dest2;
+	wire [4:0] dest3;
+	wire [4:0] dest4;
+	wire [31:0]	PC11;
+	wire [31:0]	PC12;
+	wire [31:0]	PC2;
+	wire [31:0]	PC3;
+	wire [31:0]	PC4;
+	wire [31:0]	Instruction1;
+	wire [31:0]	Instruction2;
+	wire [31:0]	Branch_Address;
+	wire [31:0]	readdata11;
+	wire [31:0]	readdata12;
+	wire [31:0]	readdata21;
+	wire [31:0]	readdata22;
+	wire [31:0]	readdata22Forwarded;
+	wire [31:0]	readdata23;
+	wire [31:0]	data11;
+	wire [31:0]	data12;
+	wire [31:0]	data21;
+	wire [31:0]	data22;
+	wire [31:0]	Immediate1;
+	wire [31:0]	Immediate2;
+	wire [31:0]	Immediate3;
+	wire [31:0] forwardVal11;
+	wire [31:0] forwardVal12;
+	wire [31:0]	WB_Data;
+	wire [31:0]	ALU_Result31;
+	wire [31:0]	ALU_Result32;
+	wire [31:0]	ALU_Result42;
+	wire [31:0]	Mem_Data1;
+	wire [31:0]	Mem_Data2;
 
 	// assemble modules
 
@@ -192,10 +198,10 @@ module MIPS
 			.PC_in(PC11),
 			.branch_address(Branch_Address),
 			.ALU_result(ALU_Result31),
-            		.shouldForward1(shouldForward1),
-            		.shouldForward2(shouldForward2),
-		        .forwardVal1(forwardVal11),
-            		.forwardVal2(forwardVal12)
+      .shouldForward1(shouldForward1),
+      .shouldForward2(shouldForward2),
+		  .forwardVal1(forwardVal11),
+      .forwardVal2(forwardVal12)
 		);
 
 	EXE_Stage_reg EXER	// execution register

@@ -9,24 +9,24 @@ module Controller
 		EXE_Cmd,
 		BR_Type
 	);
-	
+
 	// input and output ports
-	input	[5:0]	Opcode;
-	output			Is_Imm;
-	output			WB_En;
-	output			MEM_R_En;
-	output			MEM_W_En;
+	input		[5:0]	Opcode;
+	output				Is_Imm;
+	output				WB_En;
+	output				MEM_R_En;
+	output				MEM_W_En;
 	output	[3:0]	EXE_Cmd;
 	output	[1:0]	BR_Type;
-	
+
 	// registers
-	reg				Is_Imm;
-	reg				WB_En;
-	reg				MEM_R_En;
-	reg				MEM_W_En;
+	reg					Is_Imm;
+	reg					WB_En;
+	reg					MEM_R_En;
+	reg					MEM_W_En;
 	reg	[3:0]		EXE_Cmd;
 	reg	[1:0]		BR_Type;
-	
+
 	// define cases
 	parameter NOP = 0;
 	parameter ADD = 1;
@@ -46,7 +46,7 @@ module Controller
 	parameter BEZ = 40;
 	parameter BNE = 41;
 	parameter JMP = 42;
-	
+
 	// define branch types
 	parameter NO_BRANCH_Code = 2'b0;
 	parameter BEZ_Code = 2'b01;
@@ -54,7 +54,7 @@ module Controller
 	parameter JMP_Code = 2'b11;
 
 	// build module
-	
+
 	always @(*)
 	begin
 		case(Opcode)
@@ -75,7 +75,7 @@ module Controller
 			default:
 				Is_Imm = 0;
 		endcase
-		
+
 		case(Opcode)
 			NOP:
 				WB_En = 0;
@@ -90,21 +90,21 @@ module Controller
 			default:
 				WB_En = 1;
 		endcase
-		
+
 		case(Opcode)
 			LD:
 				MEM_R_En = 1;
 			default:
 				MEM_R_En = 0;
 		endcase
-		
+
 		case(Opcode)
 			ST:
 				MEM_W_En = 1;
 			default:
 				MEM_W_En = 0;
 		endcase
-		
+
 		case(Opcode)
 			ADD:
 				EXE_Cmd = 4'b0000;
@@ -137,7 +137,7 @@ module Controller
 			default:
 				EXE_Cmd = {4{1'bx}};
 		endcase
-		
+
 		case(Opcode)
 			BEZ:
 				BR_Type = BEZ_Code;
