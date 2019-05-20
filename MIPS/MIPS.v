@@ -232,7 +232,7 @@ module MIPS
 	assign shouldStallBy2FromExe = !(src21 ^ dest2) & WB_En22 & ~Is_Imm1 & |dest2;
 	assign shouldStallBy1FromMem = !(src11 ^ dest3) & WB_En32 & |dest3;
 	assign shouldStallBy2FromMem = !(src21 ^ dest3) & WB_En32 & ~Is_Imm1 & |dest3;
-	assign shouldStallByStoreFromExe = !(src21 ^ dest2) & WB_En22 & MEM_W_En21 & |dest2;
+	assign shouldStallByStoreFromExe = !(src21 ^ dest2) & WB_En22 & MEM_W_En21 & |dest2; // is & WB_En wrong?
 	assign shouldStallByStoreFromMem = !(src21 ^ dest3) & WB_En32 & MEM_W_En21 & |dest3;
 	assign shouldStallByBNEFromExe = !(src21 ^ dest2) & WB_En22 & !(BR_Type1 ^ BNE_Code) & |dest2;
 	assign shouldStallByBNEFromMem = !(src21 ^ dest3) & WB_En32 & !(BR_Type1 ^ BNE_Code) & |dest3;
@@ -247,11 +247,13 @@ module MIPS
 	assign shouldForward2FromExe = !(src22 ^ dest3) & WB_En32 & (~Is_Imm2 | !(BR_Type2 ^ BNE_Code)) & |dest3;
 	assign shouldForward1FromMem = !(src12 ^ dest4) & WB_En42 & |dest4;
 	assign shouldForward2FromMem = !(src22 ^ dest4) & WB_En42 & (~Is_Imm2 | !(BR_Type2 ^ BNE_Code)) & |dest4;
-	assign shouldForward1 = shouldForward1FromExe | shouldForward1FromMem & ~sel;
-	assign shouldForward2 = shouldForward2FromExe | shouldForward2FromMem & ~sel;
+	assign shouldForward1 = (shouldForward1FromExe | shouldForward1FromMem) & ~sel;
+	assign shouldForward2 = (shouldForward2FromExe | shouldForward2FromMem) & ~sel;
 	assign shouldForward1FromMemLoadMem = !(src12 ^ dest4) & MEM_R_En42 & |dest4;
 	assign shouldForward2FromMemLoadMem = !(src22 ^ dest4) & MEM_R_En42 & |dest4;
-	assign loadForwardStall = shouldForward1FromMemLoadMem | shouldForward2FromMemLoadMem & ~sel;
+	assign shouldForward1FromMemLoadExe = !(src12 ^ dest3) & MEM_R_En32 & |dest3;
+	assign shouldForward2FromMemLoadExe = !(src22 ^ dest3) & MEM_R_En32 & |dest3;
+	assign loadForwardStall = (shouldForward1FromMemLoadMem | shouldForward2FromMemLoadMem) & ~sel;
 	assign forwardVal11 = (shouldForward1FromExe) ? ALU_Result32 : (shouldForward1FromMem) ? ALU_Result42 : {32{1'bx}};
 	assign forwardVal12 = (shouldForward2FromExe) ? ALU_Result32 : (shouldForward2FromMem) ? ALU_Result42 : {32{1'bx}};
 	assign shouldForwardMemWriteFromExe = !(src22 ^ dest3) & WB_En32 & MEM_W_En22 & |dest3 & ~sel; //st
