@@ -61,7 +61,7 @@ module EXE_Stage_reg
 	// build module
 	always @(posedge clk)
 	begin
-		if(rst)
+		if(rst | loadForwardStall)
 		begin
 			dest <= 5'b0;
 			PC <= 32'b0;
@@ -75,18 +75,15 @@ module EXE_Stage_reg
 		end
 		else
 		begin
-			if (~loadForwardStall)
-			begin
-				dest <= dest_in;
-				PC <= PC_in;
-				WB_En <= WB_En_in;
-				MEM_R_En <= MEM_R_En_in;
-				MEM_W_En <= MEM_W_En_in;
-				Is_Imm <= Is_Imm_in;
-				readdata <= readdata_in;
-				Immediate <= Immediate_in;
-				ALU_result <= ALU_result_in;
-			end
+			dest <= dest_in;
+			PC <= PC_in;
+			WB_En <= WB_En_in;
+			MEM_R_En <= MEM_R_En_in;
+			MEM_W_En <= MEM_W_En_in;
+			Is_Imm <= Is_Imm_in;
+			readdata <= readdata_in;
+			Immediate <= Immediate_in;
+			ALU_result <= ALU_result_in;
 		end
 	end
 
