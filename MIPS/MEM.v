@@ -5,19 +5,27 @@ module MEM_Stage
 		rst,
 		read,
 		write,
-		address,
+		aluResult,
+		writedata,
+		SRAM_NOT_READY,
+		SRAMaddress,
+		SRAMWEn,
 		readdata,
-		writedata
+		SRAMdata,
 	);
 
 	// input and outputs
-	input						clk;
-	input						rst;
-	input						read;
-	input						write;
-	input		[15:0]	address;
-	input		[31:0]	writedata;
+	input			clk;
+	input			rst;
+	input			read;
+	input			write;
+	output 		SRAMWEn;
+	input	[31:0]	aluResult;
+	input	[31:0]	writedata;
+	output [17:0]	SRAMaddress;
+	output			SRAM_NOT_READY;
 	output	[31:0]	readdata;
+	inout	[15:0]	SRAMdata;
 
 	// registers and wires
 	reg			[31:0]	registers[255:0];
@@ -26,15 +34,34 @@ module MEM_Stage
 
 	// build module
 
+	// memory address generator
 	MemAdd MA
 	(
-		.address_in(address),
+		.address_in(aluResult[15:0]),
 		.address(realaddress)
 	);
 
-	assign readdata = (read & realaddress[15:8]) ? {32{1'bx}} : (read) ? registers[realaddress[7:0]] : 32'b0;
+	// read part
+	// SRAM_CTR sram
+	// 	(
+	// 		.clk(clk),
+	// 		.MEM_R_EN(read),
+	// 		.MEM_W_EN(write),
+	// 		.rst(rst),
+	// 		.SRAMaddress(SRAMaddress),
+	// 		.SRAMWEn(SRAMWEn),
+	// 		.SRAMdata(SRAMdata),
+	// 		.SRAM_NOT_READY(SRAM_NOT_READY),
+	// 		.writeData(writedata),
+	// 		.address(realaddress),
+	// 		.readData(readdata)
+	// 	);
 
-	integer i ;
+	assign SRAM_NOT_READY = 1'b0;
+	assign readdata = (read & realaddress[15:8]) ? {32{1'bx}} : (read) ? registers[realaddress[7:0]] : 32'b0;
+	assign wbData = (read) ? readdata : aluResult;
+
+	// write part
 	always @(posedge clk)
 	begin
 		if(write)

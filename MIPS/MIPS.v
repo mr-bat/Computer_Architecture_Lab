@@ -4,18 +4,22 @@ module MIPS
 	(
 		clk,
 		rst,
-		sel,
-		Instruction
+		Sel,
+		SRAMaddress, 	//	SRAM Address bus 18 Bits
+		SRAMWEn, 			//	SRAM Write Enable
+		SRAMdata, 		//	SRAM Data bus 16 Bits
 	);
 
 	// parameters
 	parameter BNE_Code = 2'b10;
 
 	// input and outputs
-	input			clk;
-	input			rst;
-	input 		sel;
-	output	[5:0]	Instruction;
+	input					clk;
+	input					rst;
+	input					Sel;
+	output  			SRAMWEn;
+	output [17:0]	SRAMaddress;
+	inout	[15:0]	SRAMdata;
 
 	// wires
 	wire shouldStallBy1FromExe;
@@ -44,6 +48,10 @@ module MIPS
 	wire Is_Imm1;
 	wire Is_Imm2;
 	wire Branch_Taken;
+	wire			SRAM_NOT_READY;
+	wire			Stall;
+	wire 			loadForwardStall;
+	wire 			superStall;
 	wire Stall;
 	wire [1:0] BR_Type1;
 	wire [1:0] BR_Type2;
@@ -89,14 +97,13 @@ module MIPS
 
 	// assemble modules
 
-	assign Instruction = Instruction1[31:26]; // output
-
 	IF_Stage IFS // instruction fetch
 		(
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
 			.loadForwardStall(load_foward_stall),
+			.superStall(superStall),
 			.branch_address(Branch_Address),
 			.Instruction(Instruction1),
 			.branch_taken(Branch_Taken),
@@ -109,6 +116,7 @@ module MIPS
 			.rst(rst),
 			.stall(Stall),
 			.loadForwardStall(load_foward_stall),
+			.superStall(superStall),
 			.Flush(Branch_Taken),
 			.Instruction_in(Instruction1),
 			.PC_in(PC11),
@@ -146,6 +154,7 @@ module MIPS
 			.rst(rst),
 			.stall(Stall),
 			.loadForwardStall(load_foward_stall),
+			.superStall(superStall),
 			.Flush(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
@@ -202,6 +211,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.loadForwardStall(load_foward_stall),
+			.superStall(superStall),
 			.PC_in(PC2),
 			.PC(PC3),
 			.WB_En_in(WB_En22),
@@ -263,15 +273,20 @@ module MIPS
 			.rst(rst),
 			.read(MEM_R_En32),
 			.write(MEM_W_En32),
-			.address(ALU_Result32[15:0]),
+			.aluResult(ALU_Result32),
 			.readdata(Mem_Data1),
-			.writedata(readdata23)
+			.writedata(readdata23),
+			.SRAMaddress( SRAMaddress ),
+			.SRAMWEn( SRAMWEn ),
+			.SRAM_NOT_READY( SRAM_NOT_READY ),
+			.SRAMdata( SRAMdata )
 		);
 
 	MEM_Stage_reg MEMR	// memory register
 		(
 			.clk(clk),
 			.rst(rst),
+			.superStall(superStall),
 			.PC_in(PC3),
 			.PC(PC4),
 			.WB_En_in(WB_En32),

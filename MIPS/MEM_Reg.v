@@ -3,6 +3,7 @@ module MEM_Stage_reg
 	(
 		clk,
 		rst,
+		superStall,
 		PC_in,
 		PC,
 		WB_En_in,
@@ -20,6 +21,7 @@ module MEM_Stage_reg
 	// input and output ports
 	input						clk;
 	input						rst;
+	input 		superStall;
 	input						WB_En_in;
 	input						MEM_R_En_in;
 	input		[4:0]		dest_in;
@@ -55,12 +57,14 @@ module MEM_Stage_reg
 		end
 		else
 		begin
-			dest <= dest_in;
-			PC <= PC_in;
-			WB_En <= WB_En_in;
-			MEM_R_En <= MEM_R_En_in;
-			ALU_result <= ALU_result_in;
-			Mem_Data <= Mem_Data_in;
+			if (~superStall) begin
+				dest <= dest_in;
+				PC <= PC_in;
+				WB_En <= WB_En_in;
+				MEM_R_En <= MEM_R_En_in;
+				ALU_result <= ALU_result_in;
+				Mem_Data <= Mem_Data_in;
+			end
 		end
 	end
 

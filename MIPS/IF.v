@@ -5,6 +5,7 @@ module IF_Stage
 		rst,
 		stall,
 		loadForwardStall,
+		superStall,
 		Instruction,
 		branch_taken,
 		branch_address,
@@ -16,6 +17,7 @@ module IF_Stage
 	input	rst;
 	input	stall;
 	input loadForwardStall;
+	input 		superStall;
 	input branch_taken;
 	input	[31:0] branch_address;
 	output [31:0]	Instruction;
@@ -37,7 +39,7 @@ module IF_Stage
 			if(branch_taken)
 				PC <= branch_address;
 			else
-				if(~stall & ~loadForwardStall)
+				if( ~stall & ~superStall & ~loadForwardStall )
 					PC <= PC + 4;
 		end
 	end

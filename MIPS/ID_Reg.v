@@ -5,6 +5,7 @@ module ID_Stage_reg
 		rst,
 		stall,
 		loadForwardStall,
+		superStall,
 		Flush,
 		src1_in,
 		src2_in,
@@ -43,6 +44,7 @@ module ID_Stage_reg
 	input	rst;
 	input	stall;
 	input	loadForwardStall;
+	input 		superStall;
 	input Flush;
 	input WB_En_in;
 	input MEM_R_En_in;
@@ -118,7 +120,7 @@ module ID_Stage_reg
 		end
 		else
 		begin
-			if (~loadForwardStall)
+			if (~loadForwardStall & ~superStall)
 			begin
 				dest <= dest_in;
 				readdata1 <= readdata1_in;

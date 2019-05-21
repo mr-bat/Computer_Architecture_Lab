@@ -5,6 +5,7 @@ module IF_Stage_reg
 		rst,
 		stall,
 		loadForwardStall,
+		superStall,
 		Flush,
 		Instruction_in,
 		PC_in,
@@ -17,6 +18,7 @@ module IF_Stage_reg
 	input	rst;
 	input	stall;
 	input loadForwardStall;
+	input 		superStall;
 	input Flush;
 	input	[31:0] Instruction_in;
 	input	[31:0] PC_in;
@@ -40,7 +42,7 @@ module IF_Stage_reg
 		end
 		else
 		begin
-			if(~stall & ~loadForwardStall)
+			if( ~stall & ~superStall & ~loadForwardStall)
 			begin
 				Instruction <= Instruction_in;
 				PC <= PC_in;
