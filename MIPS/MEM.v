@@ -32,15 +32,24 @@ module MEM_Stage
 
 	// build module
 
-	// memory address generator
-	MemAdd MA
+	MemAdd MA	// memory address generator
 	(
 		.address_in(address),
 		.address(realaddress)
 	);
 
-	// read part
-	SRAM_CTR sram
+	CACHE cache // cache
+		(
+			.clk(clk),
+			.rst(rst),
+			.cache_read(read),
+			.cache_write(write),
+			.address(realaddress),
+			.cache_readdata(readdata),
+			.cache_writedata(writedata)
+		);
+
+	SRAM_CTR sram // on chip SRAM
 		(
 			.clk(clk),
 			.MEM_R_EN(read),
@@ -50,9 +59,9 @@ module MEM_Stage
 			.SRAMWEn(SRAMWEn),
 			.SRAMdata(SRAMdata),
 			.SRAM_NOT_READY(SRAM_NOT_READY),
-			.writeData(writedata),
-			.address(realaddress),
-			.readData(readdata)
+			.writeData(SRAM_writedata),
+			.address(SRAM_address),
+			.readData(SRAM_readdata)
 		);
 
 endmodule
