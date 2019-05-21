@@ -36,7 +36,7 @@ module IF_Stage
 			PC <= 32'b0;
 		else
 		begin
-			if(branch_taken)
+			if(branch_taken & ~superStall)
 				PC <= branch_address;
 			else
 				if( ~stall & ~superStall & ~loadForwardStall )

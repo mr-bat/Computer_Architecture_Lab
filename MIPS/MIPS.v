@@ -4,10 +4,10 @@ module MIPS
 	(
 		clk,
 		rst,
-		Sel,
+		sel,
 		SRAMaddress, 	//	SRAM Address bus 18 Bits
 		SRAMWEn, 			//	SRAM Write Enable
-		SRAMdata, 		//	SRAM Data bus 16 Bits
+		SRAMdata  		//	SRAM Data bus 16 Bits
 	);
 
 	// parameters
@@ -16,7 +16,7 @@ module MIPS
 	// input and outputs
 	input					clk;
 	input					rst;
-	input					Sel;
+	input					sel;
 	output  			SRAMWEn;
 	output [17:0]	SRAMaddress;
 	inout	[15:0]	SRAMdata;
@@ -48,10 +48,6 @@ module MIPS
 	wire Is_Imm1;
 	wire Is_Imm2;
 	wire Branch_Taken;
-	wire			SRAM_NOT_READY;
-	wire			Stall;
-	wire 			loadForwardStall;
-	wire 			superStall;
 	wire Stall;
 	wire [1:0] BR_Type1;
 	wire [1:0] BR_Type2;
@@ -273,13 +269,13 @@ module MIPS
 			.rst(rst),
 			.read(MEM_R_En32),
 			.write(MEM_W_En32),
-			.aluResult(ALU_Result32),
+			.address(ALU_Result32[15:0]),
 			.readdata(Mem_Data1),
 			.writedata(readdata23),
-			.SRAMaddress( SRAMaddress ),
-			.SRAMWEn( SRAMWEn ),
-			.SRAM_NOT_READY( SRAM_NOT_READY ),
-			.SRAMdata( SRAMdata )
+			.SRAMaddress(SRAMaddress),
+			.SRAMWEn(SRAMWEn),
+			.SRAM_NOT_READY(superStall),
+			.SRAMdata(SRAMdata)
 		);
 
 	MEM_Stage_reg MEMR	// memory register
