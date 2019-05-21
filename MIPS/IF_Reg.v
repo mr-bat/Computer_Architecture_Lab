@@ -18,7 +18,7 @@ module IF_Stage_reg
 	input	rst;
 	input	stall;
 	input loadForwardStall;
-	input 		superStall;
+	input superStall;
 	input Flush;
 	input	[31:0] Instruction_in;
 	input	[31:0] PC_in;

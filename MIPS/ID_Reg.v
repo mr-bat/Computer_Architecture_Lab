@@ -99,7 +99,7 @@ module ID_Stage_reg
 	// pass instruction decode outputs
 	always @(posedge clk)
 	begin
-		if(rst | Flush | stall)
+		if(rst | Flush | (stall & ~superStall))
 		begin
 			dest <= 5'b0;
 			readdata1 <= 32'b0;

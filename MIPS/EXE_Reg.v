@@ -58,7 +58,7 @@ module EXE_Stage_reg
 	// build module
 	always @(posedge clk)
 	begin
-		if(rst | loadForwardStall)
+		if(rst | (loadForwardStall & ~superStall))
 		begin
 			dest <= 5'b0;
 			PC <= 32'b0;

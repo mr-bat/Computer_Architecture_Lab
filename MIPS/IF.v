@@ -39,7 +39,7 @@ module IF_Stage
 			if(branch_taken & ~superStall)
 				PC <= branch_address;
 			else
-				if( ~stall & ~superStall & ~loadForwardStall )
+				if(~stall & ~superStall & ~loadForwardStall)
 					PC <= PC + 4;
 		end
 	end
