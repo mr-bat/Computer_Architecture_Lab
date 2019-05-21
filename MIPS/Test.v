@@ -21,7 +21,7 @@ module test;
 
 	initial
 	begin
-		sel = 1;
+		sel = 0;
 		clk = 0; rst = 0;
 		#(35) rst = 1;
 		#(40) rst = 0;

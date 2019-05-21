@@ -30,12 +30,6 @@ module MIPS
 	wire shouldStallBy2;
 	wire shouldStallByStore;
 	wire shouldStallByBNE;
-	wire shouldForward1FromExe;
-	wire shouldForward2FromExe;
-	wire shouldForward1FromMem;
-	wire shouldForward2FromMem;
-	wire shouldForward1;
-	wire shouldForward2;
 	wire WB_En21;
 	wire WB_En22;
 	wire WB_En32;
@@ -51,7 +45,6 @@ module MIPS
 	wire Is_Imm2;
 	wire Branch_Taken;
 	wire Stall;
-	wire loadForwardStall;
 	wire [1:0] BR_Type1;
 	wire [1:0] BR_Type2;
 	wire [3:0] EXE_Cmd1;
@@ -76,7 +69,6 @@ module MIPS
 	wire [31:0]	readdata12;
 	wire [31:0]	readdata21;
 	wire [31:0]	readdata22;
-	wire [31:0]	readdata22Forwarded;
 	wire [31:0]	readdata23;
 	wire [31:0]	data11;
 	wire [31:0]	data12;
@@ -85,14 +77,15 @@ module MIPS
 	wire [31:0]	Immediate1;
 	wire [31:0]	Immediate2;
 	wire [31:0]	Immediate3;
-	wire [31:0] forwardVal11;
-	wire [31:0] forwardVal12;
 	wire [31:0]	WB_Data;
 	wire [31:0]	ALU_Result31;
 	wire [31:0]	ALU_Result32;
 	wire [31:0]	ALU_Result42;
 	wire [31:0]	Mem_Data1;
 	wire [31:0]	Mem_Data2;
+	wire [31:0] forward_value_alu1;
+	wire [31:0] forward_value_alu2;
+	wire [31:0] forward_value_store;
 
 	// assemble modules
 
@@ -103,7 +96,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
-			.loadForwardStall(loadForwardStall),
+			.loadForwardStall(load_foward_stall),
 			.branch_address(Branch_Address),
 			.Instruction(Instruction1),
 			.branch_taken(Branch_Taken),
@@ -115,7 +108,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
-			.loadForwardStall(loadForwardStall),
+			.loadForwardStall(load_foward_stall),
 			.Flush(Branch_Taken),
 			.Instruction_in(Instruction1),
 			.PC_in(PC11),
@@ -152,7 +145,7 @@ module MIPS
 			.clk(clk),
 			.rst(rst),
 			.stall(Stall),
-			.loadForwardStall(loadForwardStall),
+			.loadForwardStall(load_foward_stall),
 			.Flush(Branch_Taken),
 			.readdata1_in(readdata11),
 			.readdata2_in(readdata21),
@@ -198,23 +191,23 @@ module MIPS
 			.PC_in(PC11),
 			.branch_address(Branch_Address),
 			.ALU_result(ALU_Result31),
-      .shouldForward1(shouldForward1),
-      .shouldForward2(shouldForward2),
-		  .forwardVal1(forwardVal11),
-      .forwardVal2(forwardVal12)
+      .shouldForward1(forward_signal_alu1),
+      .shouldForward2(forward_signal_alu2),
+		  .forwardVal1(forward_value_alu1),
+      .forwardVal2(forward_value_alu2)
 		);
 
 	EXE_Stage_reg EXER	// execution register
 		(
 			.clk(clk),
 			.rst(rst),
-			.loadForwardStall(loadForwardStall),
+			.loadForwardStall(load_foward_stall),
 			.PC_in(PC2),
 			.PC(PC3),
 			.WB_En_in(WB_En22),
 			.MEM_R_En_in(MEM_R_En22),
 			.MEM_W_En_in(MEM_W_En22),
-			.readdata_in(readdata22Forwarded),
+			.readdata_in(forward_value_store),
 			.Immediate_in(Immediate3),
 			.ALU_result_in(ALU_Result31),
 			.dest_in(dest2),
@@ -243,22 +236,26 @@ module MIPS
 	assign Stall = (shouldStallBy1 | shouldStallBy2 | shouldStallByStore | shouldStallByBNE) & sel;
 
 	// forwarding unit
-	assign shouldForward1FromExe = !(src12 ^ dest3) & WB_En32 & |dest3;
-	assign shouldForward2FromExe = !(src22 ^ dest3) & WB_En32 & (~Is_Imm2 | !(BR_Type2 ^ BNE_Code)) & |dest3;
-	assign shouldForward1FromMem = !(src12 ^ dest4) & WB_En42 & |dest4;
-	assign shouldForward2FromMem = !(src22 ^ dest4) & WB_En42 & (~Is_Imm2 | !(BR_Type2 ^ BNE_Code)) & |dest4;
-	assign shouldForward1 = (shouldForward1FromExe | shouldForward1FromMem) & ~sel;
-	assign shouldForward2 = (shouldForward2FromExe | shouldForward2FromMem) & ~sel;
-	assign shouldForward1FromMemLoadMem = !(src12 ^ dest4) & MEM_R_En42 & |dest4;
-	assign shouldForward2FromMemLoadMem = !(src22 ^ dest4) & MEM_R_En42 & |dest4;
-	assign shouldForward1FromMemLoadExe = !(src12 ^ dest3) & MEM_R_En32 & |dest3;
-	assign shouldForward2FromMemLoadExe = !(src22 ^ dest3) & MEM_R_En32 & |dest3;
-	assign loadForwardStall = (shouldForward1FromMemLoadMem | shouldForward2FromMemLoadMem) & ~sel;
-	assign forwardVal11 = (shouldForward1FromExe) ? ALU_Result32 : (shouldForward1FromMem) ? ALU_Result42 : {32{1'bx}};
-	assign forwardVal12 = (shouldForward2FromExe) ? ALU_Result32 : (shouldForward2FromMem) ? ALU_Result42 : {32{1'bx}};
-	assign shouldForwardMemWriteFromExe = !(src22 ^ dest3) & WB_En32 & MEM_W_En22 & |dest3 & ~sel; //st
-	assign shouldForwardMemWriteFromMem = !(src22 ^ dest4) & WB_En42 & MEM_W_En22 & |dest4 & ~sel; //st
-	assign readdata22Forwarded = (shouldForwardMemWriteFromExe) ? ALU_Result32 : (shouldForwardMemWriteFromMem) ? ALU_Result42 : readdata22;
+	assign forward_from_exe_to_alu1 = !(src12 ^ dest3) & WB_En32 & |dest3;
+	assign forward_from_exe_to_alu2 = !(src22 ^ dest3) & ~Is_Imm2 & WB_En32 & |dest3;
+	assign forward_from_mem_to_alu1 = !(src12 ^ dest4) & WB_En42 & |dest4;
+	assign forward_from_mem_to_alu2 = !(src22 ^ dest4) & ~Is_Imm2 & WB_En42 & |dest4;
+	assign forward_from_exe_to_BNE = !(src22 ^ dest3) & !(BR_Type2 ^ BNE_Code) & WB_En32 & |dest3;
+	assign forward_from_mem_to_BNE = !(src22 ^ dest4) & !(BR_Type2 ^ BNE_Code) & WB_En42 & |dest4;
+	assign forward_from_exe_to_store = !(src22 ^ dest3) & WB_En32 & MEM_W_En22 & |dest3 & ~sel;
+	assign forward_from_mem_to_store = !(src22 ^ dest4) & WB_En42 & MEM_W_En22 & |dest4 & ~sel;
+	assign forward_stall_from_exe_to_alu1 = !(src12 ^ dest3) & MEM_R_En32 & |dest3;
+	assign forward_stall_from_exe_to_alu2 = !(src22 ^ dest3) & MEM_R_En32 & |dest3;
+	assign load_foward_stall = forward_stall_from_exe_to_alu1 | forward_stall_from_exe_to_alu2;
+	assign forward_value_alu1 = forward_from_exe_to_alu1 ? ALU_Result32 :
+															forward_from_mem_to_alu1 ? WB_Data : {32{1'bx}};
+	assign forward_value_alu2 = (forward_from_exe_to_alu2 | forward_from_exe_to_BNE) ? ALU_Result32 :
+ 															(forward_from_mem_to_alu2 | forward_from_mem_to_BNE) ? WB_Data : {32{1'bx}};
+	assign forward_value_store = forward_from_exe_to_store ? ALU_Result32 :
+ 															 forward_from_mem_to_store ? WB_Data : readdata22;
+	assign forward_signal_alu1 = (forward_from_exe_to_alu1 | forward_from_mem_to_alu1) & ~sel;
+	assign forward_signal_alu2 = (forward_from_exe_to_alu2 | forward_from_exe_to_BNE |
+ 																forward_from_mem_to_alu2 | forward_from_mem_to_BNE) & ~sel;
 
 	MEM_Stage MEMS // memory
 		(
