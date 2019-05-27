@@ -44,32 +44,32 @@ module MEM_Stage
 	);
 
 	// read part
-	SRAM_CTR sram
-		(
-			.clk(clk),
-			.MEM_R_EN(read),
-			.MEM_W_EN(write),
-			.rst(rst),
-			.SRAMaddress(SRAMaddress),
-			.SRAMWEn(SRAMWEn),
-			.SRAMdata(SRAMdata),
-			.SRAM_NOT_READY(SRAM_NOT_READY),
-			.writeData(writedata),
-			.address(realaddress),
-			.readData(readdata)
-		);
+	// SRAM_CTR sram
+	// 	(
+	// 		.clk(clk),
+	// 		.MEM_R_EN(read),
+	// 		.MEM_W_EN(write),
+	// 		.rst(rst),
+	// 		.SRAMaddress(SRAMaddress),
+	// 		.SRAMWEn(SRAMWEn),
+	// 		.SRAMdata(SRAMdata),
+	// 		.SRAM_NOT_READY(SRAM_NOT_READY),
+	// 		.writeData(writedata),
+	// 		.address(realaddress),
+	// 		.readData(readdata)
+	// 	);
 
-	// assign SRAM_NOT_READY = 1'b0;
-	//assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
+	assign SRAM_NOT_READY = 1'b0;
+	assign readdata = (read) ? registers[realaddress[7:0]] : 32'b0;
 	assign wbData = (read) ? readdata : aluResult;
 
 	// write part
-	// always @(posedge clk)
-	// begin
-	// 	if(write)
-	// 	begin
-	// 		registers[realaddress] <= writedata;
-	// 	end
-	// end
+	always @(posedge clk)
+	begin
+		if(write)
+		begin
+			registers[realaddress] <= writedata;
+		end
+	end
 
 endmodule
