@@ -274,7 +274,7 @@ module MIPS
 			.writedata(readdata23),
 			.SRAMaddress(SRAMaddress),
 			.SRAMWEn(SRAMWEn),
-			.SRAM_NOT_READY(superStall),
+			.MEM_NOT_READY(superStall),
 			.SRAMdata(SRAMdata)
 		);
 

@@ -8,7 +8,7 @@ module MEM_Stage
 		address,
 		readdata,
 		writedata,
-		SRAM_NOT_READY,
+		MEM_NOT_READY,
 		SRAMaddress,
 		SRAMWEn,
 		SRAMdata
@@ -22,7 +22,7 @@ module MEM_Stage
 	input	[15:0] address;
 	input	[31:0] writedata;
 	output SRAMWEn;
-	output SRAM_NOT_READY;
+	output MEM_NOT_READY;
 	output [17:0]	SRAMaddress;
 	output [31:0]	readdata;
 	inout	[15:0]	SRAMdata;
@@ -46,22 +46,11 @@ module MEM_Stage
 			.cache_write(write),
 			.address(realaddress),
 			.cache_readdata(readdata),
-			.cache_writedata(writedata)
-		);
-
-	SRAM_CTR sram // on chip SRAM
-		(
-			.clk(clk),
-			.MEM_R_EN(read),
-			.MEM_W_EN(write),
-			.rst(rst),
+			.cache_writedata(writedata),
 			.SRAMaddress(SRAMaddress),
 			.SRAMWEn(SRAMWEn),
 			.SRAMdata(SRAMdata),
-			.SRAM_NOT_READY(SRAM_NOT_READY),
-			.writeData(SRAM_writedata),
-			.address(SRAM_address),
-			.readData(SRAM_readdata)
+			.MEM_NOT_READY(MEM_NOT_READY)
 		);
 
 endmodule

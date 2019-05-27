@@ -18,6 +18,7 @@ module test;
     .address(SRAMaddress),
     .data(SRAMdata)
   );
+	// defparam sram.data_lenght = 20;
 
 	// module under test
 	MIPS UUT
